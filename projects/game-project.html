@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Project | Zhehao Sun Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="../css/style.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #010a14;
+      color: #c39e5c;
+    }
+    .content-section {
+      background-color: #010a14;
+      color: #c39e5c;
+    }
+    p {
+      color: #c39e5c;
+    }
+    /* 图片占位符动效 */
+    .img-placeholder {
+      background: linear-gradient(45deg, #1a237e, #3949ab);
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.375rem;
+    }
+    .img-placeholder::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+  </style>
+</head>
+<body class="bg-[#010a14] font-sans">
+  <canvas id="three-bg"></canvas>
+
+  <!-- Header -->
+  <header class="p-6 flex justify-between items-center border-b border-[#c39e5c]">
+    <h1 class="text-3xl font-extrabold tracking-wide text-[#ede7d6]">ZHEHAO SUN</h1>
+    <nav class="space-x-6 text-sm font-medium">
+      <a href="../web.html#home" class="text-[#c39e5c] hover:text-[#ede7d6]">HOME</a>
+      <a href="../web.html#portfolio" class="text-[#c39e5c] hover:text-[#ede7d6]">PORTFOLIO</a>
+      <a href="../web.html#about" class="text-[#c39e5c] hover:text-[#ede7d6]">ABOUT</a>
+      <a href="../web.html#contact" class="text-[#c39e5c] hover:text-[#ede7d6]">CONTACT</a>
+    </nav>
+  </header>
+
+  <!-- Project Content -->
+  <div class="container mx-auto px-4 py-8 content-section">
+    <!-- 项目标题 -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-4 text-[#ede7d6]">Game Project</h2>
+      <p class="text-xl text-[#c39e5c]">Full game development project with innovative mechanics and storytelling</p>
+    </div>
+
+    <!-- 项目图片展示 -->
+    <div class="mb-16">
+      <div class="w-full h-96 img-placeholder mb-4"></div>
+      <div class="grid grid-cols-4 gap-4">
+        <div class="h-36 img-placeholder"></div>
+        <div class="h-36 img-placeholder"></div>
+        <div class="h-36 img-placeholder"></div>
+        <div class="h-36 img-placeholder"></div>
+      </div>
+    </div>
+
+    <!-- 项目详情 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      <div class="md:col-span-2">
+        <h3 class="text-2xl font-semibold mb-4 text-[#ede7d6]">Project Overview</h3>
+        <p class="mb-4">
+          This game project explores the intersection of traditional Chinese mythology and modern gameplay mechanics, creating
+          a unique narrative experience that bridges cultural elements with contemporary game design principles.
+        </p>
+        <p class="mb-4">
+          The game features a protagonist who navigates between two worlds - the ancient mythological realm and a modern urban setting.
+          The core gameplay mechanic involves manipulating elements from both worlds to solve puzzles and progress through the story.
+        </p>
+        <p>
+          Special attention was given to art direction, ensuring that the visual language maintains authenticity while remaining
+          accessible to a global audience. The sound design creates an immersive atmosphere that shifts seamlessly between the two worlds.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold mb-4 text-[#ede7d6]">Project Details</h3>
+        <div class="mb-4">
+          <h4 class="text-lg font-medium mb-2 text-[#ede7d6]">Technologies</h4>
+          <ul class="list-disc list-inside text-[#c39e5c]">
+            <li>Unity Engine</li>
+            <li>C# Programming</li>
+            <li>3D Modeling (Maya)</li>
+            <li>FMOD Audio Integration</li>
+            <li>Shader Graph</li>
+          </ul>
+        </div>
+        <div class="mb-4">
+          <h4 class="text-lg font-medium mb-2 text-[#ede7d6]">Team Size</h4>
+          <p>5 members (Lead Designer, Programmer, Artist, Animator, Sound Designer)</p>
+        </div>
+        <div>
+          <h4 class="text-lg font-medium mb-2 text-[#ede7d6]">Duration</h4>
+          <p>10 months (2022-2023)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 视频示例部分 -->
+    <div class="mb-16">
+      <h3 class="text-2xl font-semibold mb-6 text-center text-[#ede7d6]">Gameplay Demonstration</h3>
+      <div class="w-full h-96 img-placeholder flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-[#c39e5c] opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="text-center">
+      <a href="../web.html#portfolio" class="inline-block border border-[#c39e5c] text-[#c39e5c] px-6 py-2 rounded-full hover:bg-[#c39e5c] hover:text-[#010a14] transition">
+        Back to Portfolio
+      </a>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-[#c39e5c] text-xs bg-[#010a14] border-t border-[#c39e5c] mt-12">
+    &copy; 2025 Zhehao Sun. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="../js/background.js"></script>
+  <script src="../js/common.js"></script>
+</body>
+</html> 

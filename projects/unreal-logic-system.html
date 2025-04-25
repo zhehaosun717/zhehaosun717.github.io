@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unreal Logic System & Shader | Zhehao Sun Portfolio</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="../css/style.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #010a14;
+      color: #c39e5c;
+    }
+    .content-section {
+      background-color: #010a14;
+      color: #c39e5c;
+    }
+    p {
+      color: #c39e5c;
+    }
+    /* 图片占位符动效 */
+    .img-placeholder {
+      background: linear-gradient(45deg, #1a237e, #3949ab);
+      position: relative;
+      overflow: hidden;
+      border-radius: 0.375rem;
+    }
+    .img-placeholder::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+  </style>
+</head>
+<body class="bg-[#010a14] font-sans">
+  <canvas id="three-bg"></canvas>
+
+  <!-- Header -->
+  <header class="p-6 flex justify-between items-center border-b border-[#c39e5c]">
+    <h1 class="text-3xl font-extrabold tracking-wide text-[#ede7d6]">ZHEHAO SUN</h1>
+    <nav class="space-x-6 text-sm font-medium">
+      <a href="../web.html#home" class="text-[#c39e5c] hover:text-[#ede7d6]">HOME</a>
+      <a href="../web.html#portfolio" class="text-[#c39e5c] hover:text-[#ede7d6]">PORTFOLIO</a>
+      <a href="../web.html#about" class="text-[#c39e5c] hover:text-[#ede7d6]">ABOUT</a>
+      <a href="../web.html#contact" class="text-[#c39e5c] hover:text-[#ede7d6]">CONTACT</a>
+    </nav>
+  </header>
+
+  <!-- Project Content -->
+  <div class="container mx-auto px-4 py-8 content-section">
+    <!-- 项目标题 -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-4 text-[#ede7d6]">Unreal Logic System & Shader</h2>
+      <p class="text-xl text-[#c39e5c]">Interactive systems and custom shaders developed with Unreal Engine</p>
+    </div>
+
+    <!-- 项目图片展示 -->
+    <div class="mb-16">
+      <div class="w-full h-96 img-placeholder mb-4"></div>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="h-48 img-placeholder"></div>
+        <div class="h-48 img-placeholder"></div>
+        <div class="h-48 img-placeholder"></div>
+      </div>
+    </div>
+
+    <!-- 项目详情 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+      <div class="md:col-span-2">
+        <h3 class="text-2xl font-semibold mb-4 text-[#ede7d6]">Project Overview</h3>
+        <p class="mb-4">
+          This project demonstrates the integration of complex logic systems with advanced custom shaders in Unreal Engine. 
+          The system provides a framework for interactive environments where visual effects respond dynamically to user input and environmental conditions.
+        </p>
+        <p class="mb-4">
+          The custom shader pipeline includes techniques for realistic material representation, atmospheric effects, and real-time lighting adjustments.
+          These techniques combine to create immersive gameplay experiences with visually stunning results.
+        </p>
+        <p>
+          The logic system architecture enables designers to quickly prototype and implement interactive elements without extensive programming knowledge,
+          while still providing deep customization options for technical artists and programmers.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-2xl font-semibold mb-4 text-[#ede7d6]">Project Details</h3>
+        <div class="mb-4">
+          <h4 class="text-lg font-medium mb-2 text-[#ede7d6]">Technologies</h4>
+          <ul class="list-disc list-inside text-[#c39e5c]">
+            <li>Unreal Engine 5</li>
+            <li>Blueprint Visual Scripting</li>
+            <li>Custom HLSL Shaders</li>
+            <li>Material Expression System</li>
+            <li>Niagara Particle System</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-lg font-medium mb-2 text-[#ede7d6]">Duration</h4>
+          <p>6 months (2023-2024)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 返回按钮 -->
+    <div class="text-center">
+      <a href="../web.html#portfolio" class="inline-block border border-[#c39e5c] text-[#c39e5c] px-6 py-2 rounded-full hover:bg-[#c39e5c] hover:text-[#010a14] transition">
+        Back to Portfolio
+      </a>
+    </div>
+  </div>
+
+  <footer class="text-center py-6 text-[#c39e5c] text-xs bg-[#010a14] border-t border-[#c39e5c] mt-12">
+    &copy; 2025 Zhehao Sun. All rights reserved.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="../js/background.js"></script>
+  <script src="../js/common.js"></script>
+</body>
+</html> 

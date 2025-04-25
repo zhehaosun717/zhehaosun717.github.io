@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的现代响应式网站</title>
+    <meta name="description" content="一个现代化的响应式网站，展示个人或企业作品和服务">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 谷歌字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 网站图标 -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <a href="#home">MyWeb</a>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#home" class="active">首页</a></li>
+                    <li><a href="#services">服务</a></li>
+                    <li><a href="#portfolio">作品集</a></li>
+                    <li><a href="#about">关于</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+            <div class="mobile-menu">
+                <ul>
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#services">服务</a></li>
+                    <li><a href="#portfolio">作品集</a></li>
+                    <li><a href="#about">关于</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主页/英雄区域 -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content fade-in-up">
+                <h1>创建令人惊叹的网站体验</h1>
+                <p>我们帮助企业和个人打造现代化、响应式且用户友好的网站，提升您的在线存在感。</p>
+                <div class="hero-buttons">
+                    <a href="#portfolio" class="btn btn-primary">查看作品</a>
+                    <a href="#contact" class="btn btn-secondary">联系我们</a>
+                </div>
+            </div>
+            <div class="hero-image fade-in-up">
+                <div class="img-placeholder">
+                    <img data-src="https://via.placeholder.com/600x400/3498db/ffffff?text=Web+Design" alt="Web Design">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 服务部分 -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>我们的服务</h2>
+                <p>我们提供多种专业服务，满足您的所有网络需求</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card fade-in-up">
+                    <div class="service-icon">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <h3>网站设计</h3>
+                    <p>创建美观、现代化的网站设计，优化用户体验并打造独特的品牌形象。</p>
+                </div>
+                <div class="service-card fade-in-up">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>响应式开发</h3>
+                    <p>开发适应各种设备的响应式网站，确保在手机、平板和桌面设备上都有出色表现。</p>
+                </div>
+                <div class="service-card fade-in-up">
+                    <div class="service-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <h3>SEO优化</h3>
+                    <p>优化您的网站以提高搜索引擎排名，增加流量并提升在线可见度。</p>
+                </div>
+                <div class="service-card fade-in-up">
+                    <div class="service-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3>品牌设计</h3>
+                    <p>创建专业的标志、视觉设计和品牌指南，打造统一的品牌形象。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 作品集部分 -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2>我们的作品</h2>
+                <p>浏览我们最近完成的一些项目</p>
+            </div>
+            <div class="portfolio-filters">
+                <button class="portfolio-filter active" data-filter="all">全部</button>
+                <button class="portfolio-filter" data-filter="web">网站</button>
+                <button class="portfolio-filter" data-filter="app">应用</button>
+                <button class="portfolio-filter" data-filter="design">设计</button>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item web fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x400/2ecc71/ffffff?text=Web+Project+1" alt="Web Project 1">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>企业网站重设计</h3>
+                        <p>网站设计 / 前端开发</p>
+                        <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item app fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x400/e74c3c/ffffff?text=App+Project" alt="App Project">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>移动应用开发</h3>
+                        <p>UI设计 / 应用开发</p>
+                        <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item design fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x400/f39c12/ffffff?text=Design+Project" alt="Design Project">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>品牌标识设计</h3>
+                        <p>品牌设计 / 标志设计</p>
+                        <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item web fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x400/9b59b6/ffffff?text=Web+Project+2" alt="Web Project 2">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>电子商务网站</h3>
+                        <p>网站设计 / 电子商务</p>
+                        <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item design fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x400/34495e/ffffff?text=Design+Project+2" alt="Design Project 2">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>产品包装设计</h3>
+                        <p>包装设计 / 品牌推广</p>
+                        <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+                <div class="portfolio-item app fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x400/1abc9c/ffffff?text=App+Project+2" alt="App Project 2">
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>健身应用界面</h3>
+                        <p>UI/UX设计 / 前端开发</p>
+                        <a href="#" class="portfolio-link"><i class="fas fa-link"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于部分 -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image fade-in-up">
+                    <div class="img-placeholder">
+                        <img data-src="https://via.placeholder.com/600x600/3498db/ffffff?text=About+Us" alt="About Us">
+                    </div>
+                </div>
+                <div class="about-text fade-in-up">
+                    <div class="section-header text-left">
+                        <h2>关于我们</h2>
+                        <p>了解我们的故事和使命</p>
+                    </div>
+                    <p>我们是一支充满激情的团队，专注于创建高质量的网络解决方案。多年来，我们与各行业的客户合作，帮助他们实现在线目标并超越预期。</p>
+                    <p>我们的使命是将复杂的技术需求转化为直观、用户友好的解决方案，使客户能够专注于他们的核心业务，同时享受出色的数字体验。</p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <h3>150+</h3>
+                            <p>完成项目</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>50+</h3>
+                            <p>客户</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>10+</h3>
+                            <p>年经验</p>
+                        </div>
+                    </div>
+                    <a href="#contact" class="btn btn-primary">联系我们</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系部分 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>联系我们</h2>
+                <p>有问题？发送消息，我们会尽快回复</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info fade-in-up">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>地址</h3>
+                            <p>上海市浦东新区xx路xx号</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>电子邮件</h3>
+                            <p>info@example.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>电话</h3>
+                            <p>+86 123 4567 8910</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form-container fade-in-up">
+                    <form id="contact-form">
+                        <div class="form-group">
+                            <label for="name">姓名</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">电子邮件</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">消息</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">发送消息</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h2>MyWeb</h2>
+                    <p>创建令人惊叹的网站体验</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h3>快速链接</h3>
+                        <ul>
+                            <li><a href="#home">首页</a></li>
+                            <li><a href="#services">服务</a></li>
+                            <li><a href="#portfolio">作品集</a></li>
+                            <li><a href="#about">关于</a></li>
+                            <li><a href="#contact">联系我们</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h3>服务</h3>
+                        <ul>
+                            <li><a href="#">网站设计</a></li>
+                            <li><a href="#">响应式开发</a></li>
+                            <li><a href="#">SEO优化</a></li>
+                            <li><a href="#">品牌设计</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <span class="copyright-year">2023</span> MyWeb. 保留所有权利。</p>
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class="fab fa-weixin"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html> 
