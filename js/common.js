@@ -14,4 +14,25 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+
+  // 页面过渡动画 (Intersection Observer)
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target); // 动画只触发一次
+      }
+    });
+  }, observerOptions);
+
+  // 观察所有带有 fade-in-section 类的元素
+  document.querySelectorAll('.fade-in-section').forEach(el => {
+    observer.observe(el);
+  });
 }); 
