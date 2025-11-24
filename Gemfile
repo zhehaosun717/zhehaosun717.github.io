@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "jekyll", "~> 4.3.0"
+gem "csv"  # Required for Ruby 3.4+ compatibility
 gem "minima", "~> 2.5"
 
 group :jekyll_plugins do
