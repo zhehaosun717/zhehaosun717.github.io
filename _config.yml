@@ -1,0 +1,47 @@
+# _config.yml
+# Jekyll 配置文件
+
+title: "Zhehao Sun Portfolio"
+description: "Game Designer & Interactive Developer Portfolio"
+author: "Zhehao Sun"
+url: "https://zhehaosun717.netlify.app"
+
+# 基础配置
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+
+# 文件排除
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .vscode
+  - "*.sh"
+  - .gitignore
+  - README.md
+
+# 包含
+include:
+  - _data
+  - _includes
+  - admin
+  - assets
+
+# Jekyll插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# 自定义变量
+collections:
+  projects:
+    output: true
+    permalink: /:name/
+
+# CDN配置
+cdn:
+  threejs: "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"
+  tailwind: "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
