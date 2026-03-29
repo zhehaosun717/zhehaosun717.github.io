@@ -257,6 +257,26 @@
       ease: 'power4.out',
     }, '-=0.35');
 
+    // Portrait — cinematic reveal
+    const portrait = section.querySelector('.about-portrait');
+    if (portrait) {
+      gsap.fromTo(portrait,
+        { opacity: 0, y: 50, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: portrait,
+            start: 'top 90%',
+            end: 'bottom -20%',
+            toggleActions: 'play reverse play reverse',
+          }
+        });
+    }
+
     // About text paragraphs — staggered slide-up with fade
     gsap.utils.toArray('.about-text p').forEach((p, i) => {
       gsap.fromTo(p,
