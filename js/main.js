@@ -51,8 +51,9 @@
     const statusEl = document.getElementById('form-status');
     if (!form || !submitBtn || !statusEl) return;
 
-    // The Netlify deployment URL (works even when accessed from GitHub Pages)
-    const NETLIFY_FORM_URL = 'https://zhehaosun717.netlify.app/';
+    // Detect if we're on Netlify or another domain (e.g. GitHub Pages)
+    const isNetlify = window.location.hostname.includes('netlify.app');
+    const FORM_URL = isNetlify ? '/' : 'https://zhehaosun717.netlify.app/';
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -64,12 +65,13 @@
       statusEl.textContent = '';
 
       const formData = new FormData(form);
+      const body = new URLSearchParams(formData).toString();
 
       try {
-        const res = await fetch(NETLIFY_FORM_URL, {
+        const res = await fetch(FORM_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString(),
+          body: body,
         });
 
         if (res.ok) {
