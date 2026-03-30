@@ -7,6 +7,7 @@
 class ShaderBackground {
   constructor() {
     this.canvas = document.getElementById('three-canvas');
+    this.isMobile = window.innerWidth < 769;
     this.mouse = { x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 };
     this.mouseVelocity = { x: 0, y: 0 };
     this.prevMouse = { x: 0.5, y: 0.5 };
@@ -23,9 +24,11 @@ class ShaderBackground {
       canvas: this.canvas,
       antialias: false,
       alpha: false,
+      powerPreference: this.isMobile ? 'low-power' : 'high-performance',
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    // Mobile: cap pixel ratio at 1.0 for GPU savings
+    this.renderer.setPixelRatio(this.isMobile ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
 
     this.createShaderMesh();
     this.createParticles();
@@ -105,7 +108,7 @@ class ShaderBackground {
 
       float fbm(vec3 p) {
         float v = 0.0, a = 0.5;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < ${this.isMobile ? 3 : 5}; i++) {
           v += a * snoise(p);
           p *= 2.0;
           a *= 0.5;
@@ -304,7 +307,8 @@ class ShaderBackground {
 
   /* ========== FLOATING PARTICLES ========== */
   createParticles() {
-    const count = 120;
+    // Mobile: fewer particles for GPU savings
+    const count = this.isMobile ? 40 : 120;
     const positions = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
     const speeds = new Float32Array(count);
@@ -438,6 +442,14 @@ class ShaderBackground {
   /* ========== RENDER LOOP ========== */
   animate() {
     requestAnimationFrame(() => this.animate());
+
+    // Mobile: throttle to ~30fps for battery savings
+    if (this.isMobile) {
+      if (!this._lastFrame) this._lastFrame = 0;
+      const now = performance.now();
+      if (now - this._lastFrame < 33) return;
+      this._lastFrame = now;
+    }
 
     // MUCH MORE RESPONSIVE mouse tracking (0.12 instead of 0.06)
     this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.12;

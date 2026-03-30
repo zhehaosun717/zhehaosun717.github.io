@@ -936,6 +936,8 @@ body:has(button:hover) .cursor-dot {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   transition: all 0.4s var(--ease-out-expo);
+  position: relative;
+  overflow: hidden;
 }
 
 .form-submit:hover {
@@ -943,6 +945,65 @@ body:has(button:hover) .cursor-dot {
   color: var(--bg-primary);
   box-shadow: 0 10px 30px rgba(201, 168, 76, 0.2);
   transform: translateY(-2px);
+}
+
+.form-submit:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ---------- Form Status ---------- */
+.form-status {
+  margin-top: 1rem;
+  padding: 0;
+  font-size: 0.85rem;
+  text-align: center;
+  border-radius: 8px;
+  transition: all 0.4s var(--ease-out-expo);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.form-status.visible {
+  padding: 0.8rem 1rem;
+  max-height: 80px;
+  opacity: 1;
+}
+
+.form-status.success {
+  background: rgba(76, 201, 120, 0.12);
+  border: 1px solid rgba(76, 201, 120, 0.3);
+  color: #4cc978;
+}
+
+.form-status.error {
+  background: rgba(201, 76, 76, 0.12);
+  border: 1px solid rgba(201, 76, 76, 0.3);
+  color: #c94c4c;
+}
+
+/* ---------- Touch Ripple ---------- */
+.touch-ripple {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.touch-ripple .ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(201, 168, 76, 0.25);
+  transform: scale(0);
+  animation: rippleAnim 0.6s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleAnim {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
 }
 
 /* ---------- Footer ---------- */
@@ -1039,10 +1100,8 @@ body:has(button:hover) .cursor-dot {
   a, button { cursor: auto; }
   .cursor { display: none; }
 
-  .nav-links { display: none; }
-  .nav-toggle { display: flex; cursor: auto; }
-
-  .nav-links.open {
+  /* --- Mobile Nav Toggle (animated hamburger → X) --- */
+  .nav-links {
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -1055,14 +1114,74 @@ body:has(button:hover) .cursor-dot {
     backdrop-filter: blur(20px);
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 0;
     z-index: 99;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
   }
 
-  .nav-links.open a {
-    font-size: 1.2rem;
+  .nav-links.open {
+    pointer-events: auto;
+    opacity: 1;
   }
 
+  .nav-links li {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.4s ease, transform 0.4s var(--ease-out-expo);
+  }
+
+  .nav-links.open li {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered entrance */
+  .nav-links.open li:nth-child(1) { transition-delay: 0.08s; }
+  .nav-links.open li:nth-child(2) { transition-delay: 0.16s; }
+  .nav-links.open li:nth-child(3) { transition-delay: 0.24s; }
+  .nav-links.open li:nth-child(4) { transition-delay: 0.32s; }
+
+  .nav-links a {
+    font-size: 1.4rem;
+    padding: 1rem 2rem;
+    display: block;
+  }
+
+  .nav-toggle {
+    display: flex;
+    cursor: auto;
+    z-index: 101;
+    position: relative;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Hamburger → X animation */
+  .nav-toggle span {
+    position: absolute;
+    transition: all 0.35s var(--ease-out-expo);
+    transform-origin: center;
+  }
+
+  .nav-toggle span:nth-child(1) { transform: translateY(-7px); }
+  .nav-toggle span:nth-child(3) { transform: translateY(7px); }
+
+  .nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg);
+  }
+  .nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+
+  /* --- Layout --- */
   .about-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
@@ -1077,8 +1196,71 @@ body:has(button:hover) .cursor-dot {
     grid-template-columns: 1fr;
   }
 
+  /* --- Touch Targets (min 44px per WCAG) --- */
   .social-links {
-    gap: 1rem;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .social-link {
+    width: 52px;
+    height: 52px;
+  }
+
+  .social-link svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .research-link {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    display: inline-block;
+    min-height: 44px;
+    line-height: 2;
+  }
+
+  .research-item {
+    padding: 1.2rem 0 1.2rem 1.2rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    padding: 1rem;
+    min-height: 48px;
+  }
+
+  .form-submit {
+    min-height: 52px;
+    font-size: 0.9rem;
+  }
+
+  .project-card-header {
+    min-height: 44px;
+  }
+
+  /* --- Typography scaling --- */
+  .hero-title {
+    font-size: clamp(3rem, 14vw, 5rem);
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 8vw, 3rem);
+  }
+
+  .section {
+    padding: clamp(3rem, 8vh, 5rem) clamp(1.2rem, 4vw, 2rem);
+  }
+
+  /* --- Reduce heavy effects --- */
+  .portrait-frame:hover {
+    transform: none;
+  }
+
+  /* Disable parallax jank on mobile */
+  [data-speed] {
+    will-change: auto;
   }
 }
 

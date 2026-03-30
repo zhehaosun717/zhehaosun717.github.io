@@ -9,7 +9,12 @@
 
   /* ---------- Lenis Smooth Scroll ---------- */
   let lenis;
+  const isMobile = window.innerWidth < 769;
+
   function initLenis() {
+    // Disable Lenis on mobile — native scroll is smoother on iOS Safari
+    if (isMobile) return;
+
     lenis = new Lenis({
       duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -133,11 +138,16 @@
       });
     });
 
-    // Mobile toggle
+    // Mobile toggle — animated hamburger → X
     const toggle = document.getElementById('nav-toggle');
     const links = document.getElementById('nav-links');
     if (toggle && links) {
-      toggle.addEventListener('click', () => links.classList.toggle('open'));
+      toggle.addEventListener('click', () => {
+        links.classList.toggle('open');
+        toggle.classList.toggle('active');
+        // Prevent body scroll when menu is open
+        document.body.style.overflow = links.classList.contains('open') ? 'hidden' : '';
+      });
     }
   }
 
