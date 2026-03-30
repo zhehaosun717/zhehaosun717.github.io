@@ -207,24 +207,26 @@
 
   /* ---------- Section Transition: Cinematic Clip Reveal ---------- */
   function initSectionTransitions() {
-    // Each section transitions its content layer with a clip-path reveal
+    // Each section transitions its content layer with a reveal
     gsap.utils.toArray('.section').forEach((section) => {
       // Skip hero — it has its own intro
       if (section.classList.contains('hero')) return;
 
-      // Initially HIDDEN via CSS (opacity:0, y:40)
-      // When scrolled into view, do a cinematic wipe-in
-      gsap.to(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 85%',
-          end: 'top 40%',
-          scrub: 0.6,
-        },
-        // Clip path from bottom to full
-        opacity: 1,
-        y: 0,
-      });
+      // When scrolled into view, animate in; when scrolled out, reverse
+      gsap.fromTo(section,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 85%',
+            end: 'bottom -10%',
+            toggleActions: 'play reverse play reverse',
+          },
+        });
     });
   }
 
@@ -354,7 +356,12 @@
       gsap.to(marquee, {
         opacity: 1,
         duration: 0.5,
-        scrollTrigger: { trigger: marquee, start: 'top 90%' }
+        scrollTrigger: {
+          trigger: marquee,
+          start: 'top 90%',
+          end: 'bottom -10%',
+          toggleActions: 'play reverse play reverse',
+        }
       });
 
       // Horizontal scroll on vertical scroll
