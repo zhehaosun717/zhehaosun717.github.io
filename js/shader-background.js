@@ -431,17 +431,34 @@ class ShaderBackground {
       this.scrollProgress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
     }, { passive: true });
 
+    // Debounce resize for performance
+    let resizeTimer;
     window.addEventListener('resize', () => {
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
-      this.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
-      this.particleCamera.aspect = window.innerWidth / window.innerHeight;
-      this.particleCamera.updateProjectionMatrix();
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+        this.particleCamera.aspect = window.innerWidth / window.innerHeight;
+        this.particleCamera.updateProjectionMatrix();
+      }, 150);
     });
+
+    // Pause rendering when canvas is not visible (huge perf win when scrolled past hero)
+    this._isVisible = true;
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        this._isVisible = entries[0].isIntersecting;
+      }, { threshold: 0.01 });
+      observer.observe(this.canvas);
+    }
   }
 
   /* ========== RENDER LOOP ========== */
   animate() {
     requestAnimationFrame(() => this.animate());
+
+    // Skip rendering entirely when canvas is not visible (scrolled past hero)
+    if (!this._isVisible) return;
 
     // Mobile: throttle to ~30fps for battery savings
     if (this.isMobile) {

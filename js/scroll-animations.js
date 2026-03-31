@@ -7,6 +7,11 @@
 (function () {
   'use strict';
 
+  // Performance: force GPU compositing for all GSAP transforms
+  gsap.config({ force3D: true });
+  // Reduce ScrollTrigger overhead during fast scrolling
+  ScrollTrigger.config({ limitCallbacks: true });
+
   /* ---------- Lenis Smooth Scroll ---------- */
   let lenis;
   const isMobile = window.innerWidth < 769;
@@ -425,7 +430,7 @@
           '-=1.0');
       }
 
-      // Subtle parallax on each card while scrolling
+      // Subtle parallax on each card while scrolling (scrub: true for native perf)
       gsap.to(card, {
         yPercent: -5 - (i % 2) * 3,
         ease: 'none',
@@ -433,7 +438,7 @@
           trigger: card,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: 0.5,
+          scrub: true,
         }
       });
     });
