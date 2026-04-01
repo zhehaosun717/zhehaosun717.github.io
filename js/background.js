@@ -103,6 +103,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const mouse3D = new THREE.Vector3();
 
+  // Pre-calculate squared distances for performance
+  const mouseDistanceSq = mouseDistance * mouseDistance;
+  const connectionDistanceSq = connectionDistance * connectionDistance;
+
   function animate() {
     requestAnimationFrame(animate);
     
@@ -144,8 +148,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const dz = mouse3D.z - positions[i3 + 2];
       const distSq = dx*dx + dy*dy + dz*dz;
 
-      if (distSq < mouseDistance * mouseDistance) {
-        const force = (mouseDistance * mouseDistance - distSq) / (mouseDistance * mouseDistance);
+      if (distSq < mouseDistanceSq) {
+        const force = (mouseDistanceSq - distSq) / mouseDistanceSq;
         // 主要是水平推开，模拟手穿过烟雾
         positions[i3] -= dx * force * 0.05;
         positions[i3 + 1] -= dy * force * 0.05;
@@ -163,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
          const distSq2 = dx2*dx2 + dy2*dy2 + dz2*dz2;
 
-         if (distSq2 < connectionDistance * connectionDistance) {
+         if (distSq2 < connectionDistanceSq) {
             if (lineVertexIndex < maxConnections * 3 - 6) {
                 // 根据高度淡化连线 (可选：顶部连线更少？暂不实现以保持简单)
                linePositions[lineVertexIndex++] = positions[i3];
