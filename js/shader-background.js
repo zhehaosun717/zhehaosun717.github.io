@@ -33,7 +33,12 @@ class ShaderBackground {
     this.createShaderMesh();
     this.createParticles();
     this.bindEvents();
+    this.updateScrollLimit();
     this.animate();
+  }
+
+  updateScrollLimit() {
+    this.scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
   }
 
   /* ========== MAIN SHADER QUAD ========== */
@@ -427,8 +432,7 @@ class ShaderBackground {
     }, { passive: true });
 
     window.addEventListener('scroll', () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      this.scrollProgress = scrollHeight > 0 ? window.scrollY / scrollHeight : 0;
+      this.scrollProgress = this.scrollLimit > 0 ? window.scrollY / this.scrollLimit : 0;
     }, { passive: true });
 
     // Debounce resize for performance
@@ -440,6 +444,7 @@ class ShaderBackground {
         this.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         this.particleCamera.aspect = window.innerWidth / window.innerHeight;
         this.particleCamera.updateProjectionMatrix();
+        this.updateScrollLimit();
       }, 150);
     });
 

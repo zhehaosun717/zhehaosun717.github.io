@@ -71,9 +71,15 @@
   function initScrollProgress() {
     const bar = document.querySelector('.scroll-progress');
     if (!bar) return;
+
+    let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
+
     window.addEventListener('scroll', () => {
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      bar.style.width = (window.scrollY / h * 100) + '%';
+      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
     }, { passive: true });
   }
 
