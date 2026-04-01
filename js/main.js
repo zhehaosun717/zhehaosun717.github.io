@@ -82,7 +82,6 @@
           throw new Error(`Server responded with ${res.status}`);
         }
       } catch (err) {
-        console.warn('Form submission error:', err);
         statusEl.textContent = '✗ Failed to send. Please email me directly at zhehaosun717@gmail.com';
         statusEl.className = 'form-status visible error';
       } finally {

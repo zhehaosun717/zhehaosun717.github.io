@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
   if (typeof THREE === 'undefined') {
-    console.error('Three.js failed to load.');
     return;
   }
 
