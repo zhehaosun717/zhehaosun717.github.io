@@ -1,0 +1,3 @@
+## 2024-04-01 - [Added Screen Reader Labels to Contact Form]
+**Learning:** Found that the contact form relied solely on `placeholder` attributes for visual labels but lacked explicit `<label>` tags for the input fields (`name`, `email`, `message`), which makes it inaccessible for screen readers. The `sr-only` class exists in `css/main.css` to assist with visually hiding elements but providing them to screen readers.
+**Action:** Always verify that input fields have corresponding `<label>` elements linked with `for` and `id` attributes. If visual design prevents visible labels, use the `.sr-only` class to hide them while keeping them accessible.
