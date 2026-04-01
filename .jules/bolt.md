@@ -1,0 +1,3 @@
+## 2024-05-18 - Prevent Forced Layout Thrashing on Scroll Events
+**Learning:** In a vanilla JS environment without front-end build tools, scroll event handlers accessing layout-sensitive properties like `window.scrollY` and triggering DOM writes concurrently can easily cause layout thrashing if not properly debounced. Relying on existing `requestAnimationFrame` animation loops to read `window.scrollY` or wrapping DOM updates in `requestAnimationFrame` within the scroll event is a crucial optimization.
+**Action:** Removed redundant `scroll` event listeners where an animation loop already exists (e.g., `ShaderBackground.animate()`), and wrapped DOM writes in `scroll-animations.js` (for the scroll progress bar) inside `requestAnimationFrame` using a ticking boolean lock.
