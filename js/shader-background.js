@@ -466,10 +466,6 @@ class ShaderBackground {
       }
     }, { passive: true });
 
-    window.addEventListener('scroll', () => {
-      this.scrollProgress = this.scrollLimit > 0 ? window.scrollY / this.scrollLimit : 0;
-    }, { passive: true });
-
     // Debounce resize for performance
     let resizeTimer;
     window.addEventListener('resize', () => {
@@ -515,6 +511,9 @@ class ShaderBackground {
     this.mouseVelocity.y = this.mouse.y - this.prevMouse.y;
     this.prevMouse.x = this.mouse.x;
     this.prevMouse.y = this.mouse.y;
+
+    // Read scroll progress efficiently within the RAF loop instead of a separate scroll event listener
+    this.scrollProgress = this.scrollLimit > 0 ? window.scrollY / this.scrollLimit : 0;
 
     const elapsed = this.clock.getElapsedTime();
 

@@ -73,9 +73,16 @@
     if (!bar) return;
 
     let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
+    let ticking = false;
 
     window.addEventListener('scroll', () => {
-      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+          ticking = false;
+        });
+        ticking = true;
+      }
     }, { passive: true });
 
     window.addEventListener('resize', () => {
