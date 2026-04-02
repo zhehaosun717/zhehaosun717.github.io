@@ -18,6 +18,7 @@
     baseFreqMax: 0.018,        // Turbulence base frequency (high = finer detail)
     numOctaves: 3,             // Turbulence complexity
     influenceRadius: 280,      // Mouse influence radius (px) around card
+    influenceRadiusSq: 280 * 280, // Pre-calculated squared radius for fast distance check
     transitionSpeed: 0.05,     // Lerp speed toward target (slower = smoother)
     decaySpeed: 0.03,          // Lerp speed when mouse leaves (slow fade-out)
     seedAnimSpeed: 0.15,       // How fast the noise seed cycles (slower = more water-like)
@@ -139,14 +140,20 @@
       // Distance from mouse to card center
       const dx = mouse.x - cx;
       const dy = mouse.y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
       // Is mouse hovering over the card?
       const isOverCard = (
         mouse.x >= rect.left && mouse.x <= rect.right &&
         mouse.y >= rect.top && mouse.y <= rect.bottom
       );
-      const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
+
+      let influence = 0;
+      if (distSq < CONFIG.influenceRadiusSq) {
+        const dist = Math.sqrt(distSq);
+        influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
+      }
+
       card.isNear = isOverCard || influence > 0;
 
       if (card.isNear) {
