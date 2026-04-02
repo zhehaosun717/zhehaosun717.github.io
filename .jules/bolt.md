@@ -1,0 +1,3 @@
+## 2024-05-18 - [Fluid Distortion Animation CPU Optimization]
+**Learning:** In performance-critical `requestAnimationFrame` loops (like `js/fluid-distortion.js` iterating over cards), calculating `Math.sqrt` for distance on every element in every frame adds unnecessary CPU overhead when the elements are frequently outside the mouse interaction radius.
+**Action:** Use squared magnitude checks (e.g., `distSq < CONFIG.influenceRadiusSq`) first. Only calculate `Math.sqrt` and `influence` if the element actually falls within the interaction threshold. Derived constants like `influenceRadiusSq` should be pre-calculated in the `CONFIG` object.
