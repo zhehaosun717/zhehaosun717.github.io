@@ -1,0 +1,34 @@
+# 作品集项目数据
+# 添加新项目只需复制下面的模板并修改
+
+- id: unreal-logic-system
+  title: "Unreal Logic System & Shader"
+  description: "Interactive systems and custom shaders developed with Unreal Engine"
+  image: "/assets/images/projects/1.avif"
+  category: "Unreal Engine"
+  tags: ["Shader", "Blueprint", "VFX"]
+  delay: 0
+
+- id: game-project
+  title: "Game Project"
+  description: "Full game development project with innovative mechanics and storytelling"
+  image: "/assets/images/projects/2.avif"
+  category: "Game Design"
+  tags: ["Unity", "Narrative"]
+  delay: 100
+
+- id: game-environment
+  title: "Game Environment"
+  description: "Atmospheric environment design with focus on lighting and spatial storytelling"
+  image: "/assets/images/projects/3.avif"
+  category: "3D Art"
+  tags: ["Environment", "Lighting"]
+  delay: 200
+
+- id: character-design
+  title: "Character Design"
+  description: "Character modeling, rigging and animation for interactive experiences"
+  image: "/assets/images/projects/4.avif"
+  category: "Character Art"
+  tags: ["3D Model", "Animation"]
+  delay: 300

@@ -1,0 +1,62 @@
+# admin/config.yml
+
+backend:
+  name: git-gateway
+  branch: feature-portfolio-optimization
+  site_domain: zhehaosun717.netlify.app
+  identity: true  # Enforce Identity verification
+
+# 媒体文件设置
+media_folder: "assets/images/uploads"
+public_folder: "/assets/images/uploads"
+
+# 发布模式
+publish_mode: editorial_workflow
+
+# 站点Logo
+site_logo: /assets/images/logo.png
+
+# 集合配置
+collections:
+  # 作品集项目
+  - name: "projects"
+    label: "Projects"
+    label_singular: "Project"
+    description: "Manage your portfolio projects"
+    folder: "_data/projects"
+    slug: "{{id}}"
+    create: true
+    fields:
+      - {label: "ID", name: "id", widget: "string", hint: "Unique identifier (lowercase, hyphens only)"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Category", name: "category", widget: "select", options: ["Unreal Engine", "Game Design", "3D Art", "Character Art", "UI/UX"], default: "Game Design"}
+      - {label: "Tags", name: "tags", widget: "list", default: ["Game Design"]}
+      - {label: "Project Image", name: "image", widget: "image"}
+      - {label: "Animation Delay (ms)", name: "delay", widget: "number", default: 0, hint: "Delay for fade-in animation (0, 100, 200, etc)"}
+      - {label: "Project Page", name: "page", widget: "string", required: false, hint: "URL to project detail page"}
+
+  # 个人简介
+  - name: "bio"
+    label: "Biography"
+    delete: false
+    files:
+      - name: "about"
+        label: "About Me"
+        file: "_data/bio.yml"
+        fields:
+          - {label: "Content", name: "content", widget: "markdown", hint: "Your biography text"}
+
+  # 站点配置
+  - name: "config"
+    label: "Site Configuration"
+    delete: false
+    files:
+      - name: "general"
+        label: "General Settings"
+        file: "_data/settings.yml"
+        fields:
+          - {label: "Site Title", name: "title", widget: "string"}
+          - {label: "Description", name: "description", widget: "text"}
+          - {label: "Contact Email", name: "email", widget: "string"}
+          - {label: "Copyright", name: "copyright", widget: "string"}

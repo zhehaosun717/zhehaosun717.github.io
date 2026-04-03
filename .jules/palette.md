@@ -1,0 +1,3 @@
+## 2025-04-03 - Form accessibility and keyboard focus visibility
+**Learning:** Screen readers cannot reliably interpret `placeholder` attributes alone as form labels; explicit `<label>` elements are required even when visually hidden (e.g., using `.sr-only`). Additionally, custom cursor interfaces often obscure or conflict with native focus rings, making it critical to explicitly define `:focus-visible` styles for all interactive elements (`a`, `button`, inputs) to ensure keyboard navigation remains usable.
+**Action:** Always verify that input fields have explicitly associated labels (`for`/`id` linking) and establish global `:focus-visible` CSS rules early when designing custom themes or using non-standard cursors.
