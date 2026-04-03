@@ -1266,6 +1266,16 @@ body:has(button:hover) .cursor-dot {
   }
 }
 
+/* ---------- Keyboard Focus Navigation ---------- */
+a:focus-visible,
+button:focus-visible,
+.form-input:focus-visible,
+.form-textarea:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 /* ---------- Utility ---------- */
 .sr-only {
   position: absolute;
