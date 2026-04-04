@@ -23,6 +23,7 @@
     seedAnimSpeed: 0.15,       // How fast the noise seed cycles (slower = more water-like)
     hoverTiltMax: 3,           // Max CSS 3D tilt (degrees) on hover — subtle
   };
+  CONFIG.influenceRadiusSq = CONFIG.influenceRadius * CONFIG.influenceRadius;
 
   // ── State ──
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
@@ -120,8 +121,8 @@
   function animate() {
     animFrame = requestAnimationFrame(animate);
 
-    const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
-    const time = performance.now() * 0.001;
+    const velSq = mouse.vx * mouse.vx + mouse.vy * mouse.vy;
+    let velocity = null; // Lazy loaded velocity
 
     cards.forEach((card) => {
       // Skip cards without an image container
@@ -139,17 +140,21 @@
       // Distance from mouse to card center
       const dx = mouse.x - cx;
       const dy = mouse.y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
       // Is mouse hovering over the card?
       const isOverCard = (
         mouse.x >= rect.left && mouse.x <= rect.right &&
         mouse.y >= rect.top && mouse.y <= rect.bottom
       );
-      const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
-      card.isNear = isOverCard || influence > 0;
+      card.isNear = isOverCard || distSq < CONFIG.influenceRadiusSq;
 
       if (card.isNear) {
+        if (velocity === null) {
+          velocity = Math.sqrt(velSq);
+        }
+        const dist = Math.sqrt(distSq);
+        const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
         // Target displacement scales with proximity + velocity
         const velBoost = Math.min(velocity * 0.4, 8);  // Reduced velocity boost
         const proximityScale = isOverCard ? 1.0 : influence;
@@ -188,6 +193,9 @@
 
       // Animate seed for fluid motion (only when active)
       if (card.currentScale > 0.5) {
+        if (velocity === null) {
+          velocity = Math.sqrt(velSq);
+        }
         const seedSpeed = CONFIG.seedAnimSpeed + velocity * 0.01;
         card.seedPhase += seedSpeed;
         card.turbulence.setAttribute('seed', Math.floor(card.seedPhase) % 500);
