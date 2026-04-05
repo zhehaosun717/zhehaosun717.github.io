@@ -1,0 +1,3 @@
+## 2025-04-05 - Avoid Redundant Square Roots in Animation Loops
+**Learning:** In performance-critical animation loops running via `requestAnimationFrame` (e.g., `js/fluid-distortion.js` tracking mouse influence on many cards), executing `Math.sqrt` unconditionally on every frame for every element can become a CPU bottleneck, especially when most elements fall outside the area of effect.
+**Action:** Pre-calculate squared thresholds (like `influenceRadiusSq`) during configuration. In the animation loop, compute the squared distance (`distSq = dx * dx + dy * dy`) and only perform `Math.sqrt(distSq)` if `distSq < thresholdSq`. This creates a fast-path that bypasses expensive math operations for distant elements while preserving correct behavior.
