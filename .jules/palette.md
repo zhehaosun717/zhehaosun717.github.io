@@ -1,0 +1,3 @@
+## 2024-06-03 - Div-based accordions require explicit ARIA and keyboard handling
+**Learning:** When using arbitrary elements like `div` for interactive headers (like the project cards in this repo), they inherently lack keyboard accessibility. We must explicitly define `role="button"`, manage `tabindex="0"`, update `aria-expanded` state, and handle `keydown` events (Enter/Space) to make them usable via screen readers and keyboard navigation.
+**Action:** Next time I encounter `div`-based click listeners, I will immediately check if they need these a11y attributes and keyboard bindings to behave like native interactive elements.

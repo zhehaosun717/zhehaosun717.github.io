@@ -28,17 +28,37 @@
       const detail = card.querySelector('.project-detail');
       if (!header || !detail) return;
 
-      header.addEventListener('click', () => {
+      // Accessibility improvements
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('role', 'button');
+      header.setAttribute('aria-expanded', 'false');
+
+      const toggleCard = () => {
         const isOpen = detail.classList.contains('expanded');
 
         // Close all
-        document.querySelectorAll('.project-detail.expanded').forEach(d => {
-          d.classList.remove('expanded');
+        document.querySelectorAll('.project-card').forEach(c => {
+          const cHeader = c.querySelector('.project-card-header');
+          const cDetail = c.querySelector('.project-detail');
+          if (cHeader && cDetail) {
+             cDetail.classList.remove('expanded');
+             cHeader.setAttribute('aria-expanded', 'false');
+          }
         });
 
         // Toggle clicked
         if (!isOpen) {
           detail.classList.add('expanded');
+          header.setAttribute('aria-expanded', 'true');
+        }
+      };
+
+      header.addEventListener('click', toggleCard);
+
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleCard();
         }
       });
     });
