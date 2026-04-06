@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Redundant Math.sqrt in Animation Loops]
+**Learning:** The application evaluates proximity effects (like fluid distortion on project cards) for multiple elements per frame using `Math.sqrt`. Given that many elements will be outside the influence radius most of the time, eagerly calculating the exact distance using `Math.sqrt` causes an unnecessary CPU bottleneck.
+**Action:** Use squared magnitude checks (`distSq < thresholdSq`) to skip `Math.sqrt` calculations for elements outside the area of effect. Always pre-calculate squared threshold constants (like `CONFIG.influenceRadiusSq`) during configuration initialization.
