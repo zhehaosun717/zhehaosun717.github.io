@@ -23,22 +23,47 @@
 
   /* ---------- Project Card Expand/Collapse ---------- */
   function initProjectCards() {
-    document.querySelectorAll('.project-card').forEach(card => {
+    document.querySelectorAll('.project-card').forEach((card, index) => {
       const header = card.querySelector('.project-card-header');
       const detail = card.querySelector('.project-detail');
       if (!header || !detail) return;
 
-      header.addEventListener('click', () => {
+      // Accessibility setup
+      const detailId = card.id ? `${card.id}-detail` : `project-detail-${index}`;
+      detail.id = detailId;
+
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('aria-expanded', 'false');
+      header.setAttribute('aria-controls', detailId);
+
+      const toggleCard = () => {
         const isOpen = detail.classList.contains('expanded');
 
         // Close all
         document.querySelectorAll('.project-detail.expanded').forEach(d => {
           d.classList.remove('expanded');
+          const relatedHeader = d.closest('.project-card').querySelector('.project-card-header');
+          if (relatedHeader) {
+            relatedHeader.setAttribute('aria-expanded', 'false');
+          }
         });
 
         // Toggle clicked
         if (!isOpen) {
           detail.classList.add('expanded');
+          header.setAttribute('aria-expanded', 'true');
+        } else {
+          header.setAttribute('aria-expanded', 'false');
+        }
+      };
+
+      header.addEventListener('click', toggleCard);
+
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleCard();
         }
       });
     });
