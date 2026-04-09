@@ -1,0 +1,3 @@
+## 2026-04-09 - Added Keyboard Accessibility to Custom Accordion Project Cards
+**Learning:** The project cards in this repo acted as accordions but were built using `div` elements without proper ARIA attributes, meaning they were completely invisible to screen readers as interactive elements and unreachable via keyboard navigation.
+**Action:** Always ensure that custom interactive components (like accordions or expand/collapse cards) implement standard accessibility patterns: `role="button"`, `tabindex="0"`, `aria-expanded` state tracking, `aria-controls` linking to the content, and support for `Enter`/`Space` keydown events.
