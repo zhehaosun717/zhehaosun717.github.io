@@ -1278,3 +1278,9 @@ body:has(button:hover) .cursor-dot {
   white-space: nowrap;
   border: 0;
 }
+
+/* ---------- Accessibility ---------- */
+*:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 2px;
+}
