@@ -1,0 +1,3 @@
+## 2024-05-24 - Pre-calculate squared distance thresholds
+**Learning:** Computing `distance * distance` inside a dense animation loop (like a 2000-particle system updated per frame in Three.js) incurs significant overhead and redundant calculations. Doing `Math.sqrt` inside loops is also highly expensive and can often be avoided by comparing against squared distance thresholds instead.
+**Action:** Always extract static threshold computations (like `connectionDistance * connectionDistance`) into variables outside of animation loops, especially when running `requestAnimationFrame` and per-particle logic. Use squared distances when you only need to determine if points are within a certain radius.
