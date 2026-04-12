@@ -1,0 +1,3 @@
+## 2025-04-12 - [Animation Loop Optimization: Squared Distances]
+**Learning:** Found a specific performance bottleneck where repeating mathematical multiplications (e.g., `mouseDistance * mouseDistance`) inside nested animation loops computing particle positions per frame added unnecessary CPU load. Also discovered that `Math.sqrt()` was being calculated on every object on screen unconditionally, instead of only when elements were inside an interactive radius.
+**Action:** Always pre-calculate squared constants outside animation loops when using squared distance checks. For smooth falloffs, delay lazy-loading the exact square root calculation using an `if(distSq < thresholdSq)` block so expensive operations only occur when strictly necessary.

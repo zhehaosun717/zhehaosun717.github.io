@@ -23,6 +23,7 @@
     seedAnimSpeed: 0.15,       // How fast the noise seed cycles (slower = more water-like)
     hoverTiltMax: 3,           // Max CSS 3D tilt (degrees) on hover — subtle
   };
+  CONFIG.influenceRadiusSq = CONFIG.influenceRadius * CONFIG.influenceRadius; // Pre-calculated for performance
 
   // ── State ──
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
@@ -139,14 +140,21 @@
       // Distance from mouse to card center
       const dx = mouse.x - cx;
       const dy = mouse.y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
       // Is mouse hovering over the card?
       const isOverCard = (
         mouse.x >= rect.left && mouse.x <= rect.right &&
         mouse.y >= rect.top && mouse.y <= rect.bottom
       );
-      const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
+
+      let influence = 0;
+      // Performance: Only calculate sqrt if within influence radius
+      if (distSq < CONFIG.influenceRadiusSq) {
+          const dist = Math.sqrt(distSq);
+          influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
+      }
+
       card.isNear = isOverCard || influence > 0;
 
       if (card.isNear) {
