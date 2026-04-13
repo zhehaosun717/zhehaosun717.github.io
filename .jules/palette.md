@@ -1,0 +1,3 @@
+## 2026-04-13 - Keyboard Accessibility for Div-Based Accordions
+**Learning:** In this project, accordion-style project cards were implemented using basic `div` elements lacking native semantics and keyboard support, a common pattern that completely blocks keyboard-only and screen reader users from accessing project details.
+**Action:** When encountering non-native interactive elements (like `div`-based cards), ensure explicitly setting `role="button"`, `tabindex="0"`, dynamically managing `aria-expanded`, and implementing `keydown` event listeners for 'Enter' and 'Space' to ensure full accessibility.
