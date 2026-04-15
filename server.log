@@ -1,0 +1,11 @@
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /css/main.css HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /js/shader-background.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /js/main.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /js/scroll-animations.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /js/fluid-distortion.js HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /zhehaosun_pic.webp HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /assets/images/projects/1.avif HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:38:50] "GET /assets/images/projects/2.avif HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:39:04] "GET /assets/images/projects/3.avif HTTP/1.1" 200 -
+127.0.0.1 - - [15/Apr/2026 13:39:04] "GET /assets/images/projects/4.avif HTTP/1.1" 200 -
