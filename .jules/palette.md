@@ -1,0 +1,3 @@
+## 2024-04-15 - Keyboard Navigation on Custom Accordions
+**Learning:** When creating custom interactive elements like expanding cards using non-native HTML tags (e.g., `div` or `header`), it's crucial to explicitly manage ARIA attributes (`role="button"`, `aria-expanded`, `aria-controls`) and handle keyboard events (Enter and Space), taking care to `preventDefault` on Space to prevent page scroll. Simply adding click handlers leaves keyboard users unable to access the content.
+**Action:** Always ensure any interactive element that acts like a button or accordion has the proper role, tabindex, aria attributes representing its state, and keyboard event listeners for Enter and Space keys.
