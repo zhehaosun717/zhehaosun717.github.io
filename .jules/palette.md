@@ -1,0 +1,3 @@
+## 2025-05-18 - Keyboard Accessibility on Non-Native Elements
+**Learning:** Implementing keyboard accessibility on non-native interactive elements (like `div`-based project cards) requires more than just `tabindex="0"`. It requires explicit `role="button"` for screen readers, dynamic `aria-expanded` state management, and custom `keydown` event listeners for 'Enter' and 'Space' (while preventing default scrolling behavior on 'Space') to fully mimic native `<button>` behavior.
+**Action:** Always verify if a semantic `<button>` can be used instead. If a non-native element must be used for layout reasons, proactively implement the full suite of ARIA attributes, focus states, and keyboard event handlers.

@@ -54,6 +54,11 @@ html.lenis, html.lenis body {
   height: auto;
 }
 
+*:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
