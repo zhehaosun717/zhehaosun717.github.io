@@ -1,0 +1,3 @@
+## 2025-04-18 - Added keyboard accessibility to project cards
+**Learning:** When non-native interactive elements (like `div`-based cards or accordions) are used, native HTML accessibility features are missing. The `project-card-header` in this application relied solely on click events, failing to support keyboard navigation for screen readers or power users.
+**Action:** When working on similar custom interactive components, always set `role="button"` and `tabindex="0"`. Additionally, explicitly handle keyboard events (listening to `Enter` and `Space` keys) to trigger functionality and prevent the default scroll action for the `Space` key. Update stateful ARIA attributes (`aria-expanded`) synchronously with UI state changes.

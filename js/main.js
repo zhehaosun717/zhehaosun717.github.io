@@ -28,17 +28,35 @@
       const detail = card.querySelector('.project-detail');
       if (!header || !detail) return;
 
-      header.addEventListener('click', () => {
+      // Add accessibility attributes
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('aria-expanded', 'false');
+
+      const toggleCard = () => {
         const isOpen = detail.classList.contains('expanded');
 
         // Close all
         document.querySelectorAll('.project-detail.expanded').forEach(d => {
           d.classList.remove('expanded');
+          const siblingHeader = d.parentElement.querySelector('.project-card-header');
+          if (siblingHeader) siblingHeader.setAttribute('aria-expanded', 'false');
         });
 
         // Toggle clicked
         if (!isOpen) {
           detail.classList.add('expanded');
+          header.setAttribute('aria-expanded', 'true');
+        } else {
+          header.setAttribute('aria-expanded', 'false');
+        }
+      };
+
+      header.addEventListener('click', toggleCard);
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleCard();
         }
       });
     });
