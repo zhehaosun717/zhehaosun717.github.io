@@ -24,6 +24,9 @@
     hoverTiltMax: 3,           // Max CSS 3D tilt (degrees) on hover — subtle
   };
 
+  // Pre-calculate squared radius to avoid Math.sqrt in the hot loop when checking bounds
+  CONFIG.influenceRadiusSq = CONFIG.influenceRadius * CONFIG.influenceRadius;
+
   // ── State ──
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
@@ -120,7 +123,15 @@
   function animate() {
     animFrame = requestAnimationFrame(animate);
 
-    const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+    // Lazy load velocity to avoid Math.sqrt unless a card is active
+    let _velocity = null;
+    const getVelocity = () => {
+      if (_velocity === null) {
+        _velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+      }
+      return _velocity;
+    };
+
     const time = performance.now() * 0.001;
 
     cards.forEach((card) => {
@@ -139,18 +150,24 @@
       // Distance from mouse to card center
       const dx = mouse.x - cx;
       const dy = mouse.y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
       // Is mouse hovering over the card?
       const isOverCard = (
         mouse.x >= rect.left && mouse.x <= rect.right &&
         mouse.y >= rect.top && mouse.y <= rect.bottom
       );
-      const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
+
+      let influence = 0;
+      if (isOverCard || distSq < CONFIG.influenceRadiusSq) {
+        const dist = Math.sqrt(distSq);
+        influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
+      }
       card.isNear = isOverCard || influence > 0;
 
       if (card.isNear) {
         // Target displacement scales with proximity + velocity
+        const velocity = getVelocity();
         const velBoost = Math.min(velocity * 0.4, 8);  // Reduced velocity boost
         const proximityScale = isOverCard ? 1.0 : influence;
         card.targetScale = (CONFIG.maxDisplacement + velBoost) * proximityScale;
