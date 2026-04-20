@@ -1,0 +1,3 @@
+## 2026-04-20 - Invisible Form Labels for Screen Readers
+**Learning:** Found that the main contact form heavily relied on placeholder text without associated `<label>` tags. Screen readers handle placeholders inconsistently, making forms less accessible if standalone labels aren't used.
+**Action:** Always pair form inputs with explicit `<label>` tags using the `for` attribute and input `id`. If visual design requires hiding the label, apply `.sr-only` class to ensure screen reader compatibility without compromising the visual layout.
