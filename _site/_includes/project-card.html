@@ -1,0 +1,23 @@
+<!-- _includes/project-card.html -->
+{% assign project = include.project %}
+<a href="projects/{{ project.id }}.html"
+   class="block fade-in-section"
+   style="transition-delay: {{ project.delay }}ms;">
+  <div class="bg-[#1C2233] p-4 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-1 duration-300">
+    <div class="relative mb-4 w-full h-48 img-placeholder rounded-lg overflow-hidden">
+      <img src="{{ project.image }}"
+           alt="{{ project.title }}"
+           class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700"
+           onload="this.classList.remove('opacity-0')">
+    </div>
+    <h4 class="text-xl font-semibold text-[#ede7d6]">{{ project.title }}</h4>
+    <p class="text-[#c39e5c] mt-2 text-sm">{{ project.description }}</p>
+    {% if project.tags %}
+    <div class="mt-3 flex flex-wrap gap-2">
+      {% for tag in project.tags %}
+        <span class="px-2 py-1 bg-[#c39e5c]/20 text-[#c39e5c] text-xs rounded">{{ tag }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</a>
