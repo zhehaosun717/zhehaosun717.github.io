@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zhehao Sun</title>
+  <meta name="description" content="Zhehao Sun is a Game Designer & MA Student specializing in interactive experiences, Unreal Engine, Three.js, and game-based learning at UBC.">
+  <meta name="author" content="Zhehao Sun">
+  <meta name="keywords" content="game designer, researcher, Unreal Engine, Three.js, interactive design, UBC, SCAD, game-based learning, shader, VFX">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Zhehao Sun">
+  <meta property="og:description" content="Portfolio showcasing interactive experiences, game design, and academic research in digital humanities.">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+  <!-- Loading Screen -->
+  <div class="loader" id="loader">
+    <div class="loader-counter" id="loader-counter">0</div>
+    <div class="loader-text">Loading...</div>
+  </div>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+  </div>
+
+  <!-- Three.js Canvas -->
+  <canvas id="three-canvas"></canvas>
+
+  <!-- Background overlay — dynamic shape mask driven by scroll -->
+  <div id="bg-overlay"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="#hero" class="nav-logo" aria-label="Home"></a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#works">Works</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Content Layer -->
+  <div class="content-layer">
+
+    <!-- ======================== HERO ======================== -->
+    <section class="section hero" id="hero">
+      <h1 class="hero-title">
+        <span class="text-reveal"><span class="text-reveal-inner">Zhehao</span></span>
+        <span class="text-reveal"><span class="text-reveal-inner">Sun</span></span>
+      </h1>
+      <p class="hero-subtitle">
+        <span class="text-reveal"><span class="text-reveal-inner">Game Designer & MA Student</span></span>
+      </p>
+      <p class="hero-tagline">
+        <span class="text-reveal"><span class="text-reveal-inner">Interactive Experiences · Digital Humanities · Computational Art</span></span>
+      </p>
+      <div class="scroll-indicator">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ======================== ABOUT ======================== -->
+    <section class="section about" id="about">
+      <span class="section-label">01 — About</span>
+      <h2 class="section-title">
+        <span class="text-reveal"><span class="text-reveal-inner">About Me</span></span>
+      </h2>
+
+      <div class="about-grid">
+        <div class="about-portrait">
+          <div class="portrait-frame">
+            <picture>
+              <source srcset="zhehaosun_pic.webp" type="image/webp">
+              <img src="zhehaosun_pic.png" alt="Zhehao Sun — Portrait" class="portrait-img" loading="lazy">
+            </picture>
+            <div class="portrait-glow"></div>
+          </div>
+        </div>
+        <div class="about-text">
+          <p>
+            I am a <span class="highlight">Game Designer</span> currently pursuing my Master of Art in
+            <span class="highlight">Digital Art and Humanities</span> at the University of British Columbia. My work
+            explores the boundary where interactive media meets critical scholarship.
+          </p>
+          <p>
+            With a BFA in Interactive Design and Game Development from SCAD, and professional experience across
+            <span class="highlight">Unreal Engine</span>, Unity, WebGL, and shader development, I create
+            interactive experiences that merge artistic vision with technical craft.
+          </p>
+          <p>
+            My research interests include <span class="highlight">game-based  education</span>,
+            game design theory, and the intersection of
+            <span class="highlight">media archaeology</span>.
+          </p>
+        </div>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">2025 — Present</div>
+            <div class="timeline-school">University of British Columbia</div>
+            <div class="timeline-degree">MA in IGS Digital Art & Humanities</div>
+            <div class="timeline-location">Kelowna, BC, Canada</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2015 — 2018</div>
+            <div class="timeline-school">Savannah College of Art and Design</div>
+            <div class="timeline-degree">BFA in Interactive Design & Game Development</div>
+            <div class="timeline-location">Savannah, GA, USA</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">Summer 2015</div>
+            <div class="timeline-school">Dongguk University</div>
+            <div class="timeline-degree">Summer School</div>
+            <div class="timeline-location">Seoul, South Korea</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2013 — 2015</div>
+            <div class="timeline-school">University of North Georgia</div>
+            <div class="timeline-degree">Studio Art Major</div>
+            <div class="timeline-location">Dahlonega, GA, USA</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== RESEARCH ======================== -->
+    <section class="section research" id="research" data-bg="#0a0f1e">
+      <span class="section-label">02 — Research & Publications</span>
+      <h2 class="section-title">
+        <span class="text-reveal"><span class="text-reveal-inner">Academic Work</span></span>
+      </h2>
+
+      <div class="research-list">
+        <!-- Journal Article -->
+        <div class="research-item">
+          <div class="research-type">Journal Article</div>
+          <div class="research-title">
+            Xu, Y., <span class="author-highlight">Sun, Z.</span>, Zhen, C., Lin, Y.-S., Sarker, T. H., Thorogood, M., Lasserre, P., & Dulic, A. (2026).
+            From engagement to resilience: A systematic review of game-based learning for environmental resilience.
+          </div>
+          <div class="research-venue">Sustainability, 18(5), 2305.</div>
+          <a href="https://doi.org/10.3390/su18052305" class="research-link" target="_blank" rel="noopener">DOI →</a>
+        </div>
+
+        <!-- DiGRA 2026 — Ludoproprioceptive -->
+        <div class="research-item">
+          <div class="research-type">Conference Paper — DiGRA 2026</div>
+          <div class="research-title">
+            <span class="author-highlight">Sun, Z.</span> (Presenter), Xu, Y., Lasserre, P., Dulic, A., & Smith, M. (in press).
+            Re-evaluating the pursuit of hyper-realism in virtual reality game design through the lens of ludoproprioceptive dissonance.
+          </div>
+          <div class="research-venue">Proceedings of the 2026 Digital Games Research Association Conference (DiGRA 2026). Ireland.</div>
+        </div>
+
+        <!-- Soulslike — Springer LNCS -->
+        <div class="research-item">
+          <div class="research-type">Book Chapter — Springer LNCS</div>
+          <div class="research-title">
+            <span class="author-highlight">Sun, Z.</span> (Presenter), Xu, Y., Zhen, C., Lin, Y.-S., Thorogood, M., Lasserre, P., Dulic, A., & Smith, M. (in press).
+            Struggle as flow: Challenge, design, and experience in Soulslike games.
+          </div>
+          <div class="research-venue">Lecture Notes in Computer Science. Springer, Cham.</div>
+        </div>
+
+        <!-- Eco-Games Teacher -->
+        <div class="research-item">
+          <div class="research-type">Conference Paper — DiGRA 2026</div>
+          <div class="research-title">
+            Xu, Y., <span class="author-highlight">Sun, Z.</span>, Lasserre, P., & Dulic, A. (in press).
+            The absent teacher in eco-games: A theoretical framework for teacher integration in eco-games.
+          </div>
+          <div class="research-venue">Proceedings of the 2026 Digital Games Research Association Conference (DiGRA 2026). Ireland.</div>
+        </div>
+
+        <!-- Ecological Empathy — Springer LNCS -->
+        <div class="research-item">
+          <div class="research-type">Book Chapter — Springer LNCS</div>
+          <div class="research-title">
+            Xu, Y., <span class="author-highlight">Sun, Z.</span>, Zhen, C., Lin, Y.-S., Thorogood, M., Smith, M., Lasserre, P., & Dulic, A. (in press).
+            Mapping ecological empathy: A semantic network analysis of player perceptions in 3D environmental education games.
+          </div>
+          <div class="research-venue">Lecture Notes in Computer Science. Springer, Cham.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================== WORKS ======================== -->
+    <section class="section works" id="works" data-bg="#0d1225">
+      <span class="section-label">03 — Selected Works</span>
+
+      <div class="works-header">
+        <div class="works-marquee">INTERACTIVE EXPERIENCES — GAME DESIGN — SHADER ART — ENVIRONMENT DESIGN — INTERACTIVE EXPERIENCES</div>
+      </div>
+
+      <h2 class="section-title">
+        <span class="text-reveal"><span class="text-reveal-inner">Featured Projects</span></span>
+      </h2>
+
+      <div class="works-grid">
+
+        <!-- Project 1: Unreal Logic System & Shader -->
+        <article class="project-card" id="project-unreal">
+          <div class="project-card-header">
+            <div class="project-card-image">
+              <img src="assets/images/projects/1.avif" alt="Unreal Logic System & Shader" loading="lazy">
+            </div>
+            <div class="project-card-content">
+              <div class="project-card-category">Unreal Engine</div>
+              <h3 class="project-card-title">Unreal Logic System & Shader</h3>
+              <p class="project-card-desc">Interactive systems and custom shaders developed with Unreal Engine, showcasing Blueprint logic and real-time VFX.</p>
+              <div class="project-card-tags">
+                <span class="tag">Shader</span>
+                <span class="tag">Blueprint</span>
+                <span class="tag">VFX</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-detail">
+            <div class="project-detail-content">
+              <p class="project-detail-text">
+                A deep dive into Unreal Engine's material and Blueprint systems. This project demonstrates custom shader development
+                for real-time visual effects, interactive logic systems, and optimization techniques for game-ready assets.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 2: Game Project -->
+        <article class="project-card" id="project-game">
+          <div class="project-card-header">
+            <div class="project-card-image">
+              <img src="assets/images/projects/2.avif" alt="Game Project" loading="lazy">
+            </div>
+            <div class="project-card-content">
+              <div class="project-card-category">Game Design</div>
+              <h3 class="project-card-title">Game Project</h3>
+              <p class="project-card-desc">Full game development project with innovative mechanics and storytelling, built with focus on player experience.</p>
+              <div class="project-card-tags">
+                <span class="tag">Unity</span>
+                <span class="tag">Narrative</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-detail">
+            <div class="project-detail-content">
+              <p class="project-detail-text">
+                A complete game project exploring narrative-driven mechanics and player agency. Designed and implemented
+                from concept through production, including gameplay systems, level design, and user experience testing.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 3: Game Environment -->
+        <article class="project-card" id="project-environment">
+          <div class="project-card-header">
+            <div class="project-card-image image-placeholder">
+              <img src="assets/images/projects/3.avif" alt="Game Environment" loading="lazy">
+              <div class="image-updating-label">Updating Soon</div>
+            </div>
+            <div class="project-card-content">
+              <div class="project-card-category">3D Art</div>
+              <h3 class="project-card-title">Game Environment</h3>
+              <p class="project-card-desc">Atmospheric environment design with focus on lighting, spatial storytelling, and visual hierarchy.</p>
+              <div class="project-card-tags">
+                <span class="tag">Environment</span>
+                <span class="tag">Lighting</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-detail">
+            <div class="project-detail-content">
+              <p class="project-detail-text">
+                Environment art exploring atmospheric storytelling through lighting and spatial composition.
+                Created using industry-standard pipelines for real-time rendering, with attention to mood,
+                scale, and narrative conveyed through visual elements.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project 4: Character Design -->
+        <article class="project-card" id="project-character">
+          <div class="project-card-header">
+            <div class="project-card-image image-placeholder">
+              <img src="assets/images/projects/4.avif" alt="Character Design" loading="lazy">
+              <div class="image-updating-label">Updating Soon</div>
+            </div>
+            <div class="project-card-content">
+              <div class="project-card-category">Character Art</div>
+              <h3 class="project-card-title">Character Design</h3>
+              <p class="project-card-desc">Character modeling, rigging, and animation for interactive experiences with stylized art direction.</p>
+              <div class="project-card-tags">
+                <span class="tag">3D Model</span>
+                <span class="tag">Animation</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-detail">
+            <div class="project-detail-content">
+              <p class="project-detail-text">
+                Character art pipeline from concept to implementation, including high-poly sculpting, retopology,
+                UV mapping, texturing, rigging, and animation. Designed for real-time game engines with
+                optimized geometry and expressive animation cycles.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ======================== CONTACT ======================== -->
+    <section class="section contact" id="contact">
+      <span class="section-label">04 — Connect</span>
+
+      <div class="social-links">
+        <!-- Email -->
+        <a href="mailto:zhehaosun717@gmail.com" class="social-link" aria-label="Email" title="Email">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/zhehao-s-6256235b/" class="social-link" aria-label="LinkedIn" title="LinkedIn" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14m-.5 15.5v-5.3a3.26 3.26 0 00-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 011.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 001.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 00-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+        </a>
+        <!-- GitHub -->
+        <a href="https://github.com/zhehaosun717" class="social-link" aria-label="GitHub" title="GitHub">
+          <svg viewBox="0 0 24 24"><path d="M12 2A10 10 0 002 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/></svg>
+        </a>
+        <!-- Google Scholar -->
+        <a href="https://scholar.google.com/citations?user=uTr21iwAAAAJ&hl=en" class="social-link" aria-label="Google Scholar" title="Google Scholar" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M5.242 13.769L0 9.5 12 0l12 9.5-5.242 4.269C17.548 11.249 14.978 9.5 12 9.5c-2.977 0-5.548 1.748-6.758 4.269zM12 10a7 7 0 107 7 7 7 0 00-7-7z"/></svg>
+        </a>
+        <!-- ORCID -->
+        <a href="https://orcid.org/0009-0004-7790-6713" class="social-link" aria-label="ORCID" title="ORCID" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.369 4.378c.525 0 .947.431.947.947s-.422.947-.947.947a.95.95 0 01-.947-.947c0-.525.422-.947.947-.947zm-.722 3.038h1.444v10.041H6.647V7.416zm3.562 0h3.9c3.712 0 5.344 2.653 5.344 5.025 0 2.578-2.016 5.025-5.325 5.025h-3.919V7.416zm1.444 1.303v7.444h2.297c3.272 0 4.022-2.484 4.022-3.722 0-1.847-1.188-3.722-3.931-3.722h-2.388z"/></svg>
+        </a>
+      </div>
+
+      <!-- Contact Form -->
+      <form class="contact-form" id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="contact">
+        <p class="sr-only"><label>Don't fill this out: <input name="bot-field"></label></p>
+        <div class="form-group">
+          <input type="text" name="name" class="form-input" placeholder="Your Name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" class="form-input" placeholder="Your Email" required>
+        </div>
+        <div class="form-group">
+          <textarea name="message" class="form-textarea" placeholder="Your Message" required></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="form-submit-btn">Send Message</button>
+        <div class="form-status" id="form-status"></div>
+      </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>© 2026 Zhehao Sun. All rights reserved.</p>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="js/shader-background.js"></script>
+  <script src="js/fluid-distortion.js"></script>
+  <script src="js/scroll-animations.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

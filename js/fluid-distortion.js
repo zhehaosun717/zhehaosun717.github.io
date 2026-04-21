@@ -24,6 +24,9 @@
     hoverTiltMax: 3,           // Max CSS 3D tilt (degrees) on hover — subtle
   };
 
+  // Pre-calculate squared influence radius to avoid Math.sqrt in animation loop
+  CONFIG.influenceRadiusSq = CONFIG.influenceRadius * CONFIG.influenceRadius;
+
   // ── State ──
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
@@ -139,13 +142,20 @@
       // Distance from mouse to card center
       const dx = mouse.x - cx;
       const dy = mouse.y - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
       // Is mouse hovering over the card?
       const isOverCard = (
         mouse.x >= rect.left && mouse.x <= rect.right &&
         mouse.y >= rect.top && mouse.y <= rect.bottom
       );
+
+      // Only perform expensive Math.sqrt if within influence radius or hovered
+      let dist = Infinity;
+      if (isOverCard || distSq < CONFIG.influenceRadiusSq) {
+        dist = Math.sqrt(distSq);
+      }
+
       const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
       card.isNear = isOverCard || influence > 0;
 
