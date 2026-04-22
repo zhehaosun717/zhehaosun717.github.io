@@ -1,0 +1,3 @@
+## 2026-04-22 - Pre-calculated Thresholds in Animation Loops
+**Learning:** In Three.js nested particle loops (e.g. `js/background.js`), calculating thresholds inline via squaring (`mouseDistance * mouseDistance`) on every frame iteration causes significant cumulative performance hits (e.g. 20,000+ redundant calculations per frame). This creates a hidden performance bottleneck specifically when combined with continuous interactions like mouse movements.
+**Action:** Always derive and pre-calculate squared threshold constants (e.g. `connectionDistanceSq`, `mouseDistanceSq`) outside the core `requestAnimationFrame` and interaction loops, prioritizing initialization overhead over per-frame processing.
