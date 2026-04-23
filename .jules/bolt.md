@@ -1,0 +1,3 @@
+## 2024-10-24 - Pre-calculating Distances in High-Frequency Animation Loops
+**Learning:** Found a specific anti-pattern in `js/background.js` where distance thresholds (`mouseDistance` and `connectionDistance`) were repeatedly squared inside nested loops that run thousands of times per frame (e.g., `distSq < mouseDistance * mouseDistance`). This redundant computation introduces significant overhead in performance-critical areas like Three.js animation loops.
+**Action:** Always extract and pre-calculate squared constants (like `mouseDistanceSq`) outside the animation loop whenever a squared distance metric (`distSq`) is used for performance comparisons to eliminate repetitive multiplication.
