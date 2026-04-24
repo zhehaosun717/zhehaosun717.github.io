@@ -1,0 +1,3 @@
+## 2025-02-13 - Avoid redundant Math.sqrt in high-frequency animation loops
+**Learning:** The fluid distortion effect iterates over all project cards every frame to calculate mouse proximity. Using `Math.sqrt` to calculate the exact distance for every card, even those far outside the influence radius, creates unnecessary CPU overhead.
+**Action:** Pre-calculate squared distance thresholds (e.g., `influenceRadiusSq`) outside the loop, and use `dx*dx + dy*dy < thresholdSq` to quickly filter out distant targets before performing the expensive `Math.sqrt` only when needed for continuous lerp or gradient calculations.
