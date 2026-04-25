@@ -28,17 +28,32 @@
       const detail = card.querySelector('.project-detail');
       if (!header || !detail) return;
 
-      header.addEventListener('click', () => {
+      const toggleAccordion = () => {
         const isOpen = detail.classList.contains('expanded');
 
         // Close all
-        document.querySelectorAll('.project-detail.expanded').forEach(d => {
-          d.classList.remove('expanded');
+        document.querySelectorAll('.project-card').forEach(c => {
+          const cHeader = c.querySelector('.project-card-header');
+          const cDetail = c.querySelector('.project-detail');
+          if (cDetail && cDetail.classList.contains('expanded')) {
+            cDetail.classList.remove('expanded');
+            if (cHeader) cHeader.setAttribute('aria-expanded', 'false');
+          }
         });
 
         // Toggle clicked
         if (!isOpen) {
           detail.classList.add('expanded');
+          header.setAttribute('aria-expanded', 'true');
+        }
+      };
+
+      header.addEventListener('click', toggleAccordion);
+
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          if (e.key === ' ') e.preventDefault(); // Prevent page scroll on Space
+          toggleAccordion();
         }
       });
     });
