@@ -1,0 +1,3 @@
+## 2024-04-26 - Accessible Form Labels with Minimalist Design
+**Learning:** In minimalist designs that rely solely on `placeholder` attributes for form fields, screen reader users miss crucial context because placeholders are not reliable accessible names. Adding explicit `<label>` elements is necessary for accessibility, but can disrupt the visual design.
+**Action:** Use the `.sr-only` utility class to visually hide explicit `<label>` elements while keeping them available to screen readers, ensuring both strict aesthetic requirements and WCAG compliance are met simultaneously. Ensure the `for` attribute strictly maps to the input's `id`.
