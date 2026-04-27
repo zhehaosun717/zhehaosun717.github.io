@@ -1,3 +1,13 @@
 node_modules/
 package-lock.json
 .netlify/
+
+# Jekyll build artifacts
+_site/
+
+# Ruby vendor directory
+vendor/
+.bundle/
+
+# Gemfiles
+Gemfile.lock

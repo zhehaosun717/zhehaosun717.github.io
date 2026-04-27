@@ -1,0 +1,3 @@
+## 2024-05-20 - Form Accessibility and Focus Management
+**Learning:** Relied purely on placeholders for visual form inputs without explicit labels makes the form inaccessible to screen readers. Furthermore, a lack of generic `:focus-visible` styles limits keyboard navigability across the application. Explicit `id` and `for` mapping with visually hidden labels (`.sr-only`) resolves the a11y issue while preserving the intended UI design.
+**Action:** Always pair form inputs with explicit `<label>` tags. Use `.sr-only` class to hide labels for screen readers if visual design relies solely on placeholders. Enforce global `:focus-visible` styles early in the design system to ensure baseline keyboard accessibility for all interactive elements.
