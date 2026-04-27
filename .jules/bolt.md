@@ -1,0 +1,3 @@
+## 2023-10-27 - Pre-calculating squared distance thresholds in high-frequency animation loops
+**Learning:** In Three.js animation loops, specifically within nested iteration (like particle connections O(n*k)), repetitive multiplication for threshold comparisons (e.g. `mouseDistance * mouseDistance`) adds unnecessary overhead. The `background.js` previously executed such multiplications roughly 16,000 times per frame (2000 particles * ~8 connections + 2000 mouse distance checks).
+**Action:** Always pre-calculate squared constants outside the `requestAnimationFrame` loop when performing point-to-point squared distance comparisons (`distSq < thresholdSq`) to prevent redundant micro-calculations and improve CPU-bound animation frame times.
