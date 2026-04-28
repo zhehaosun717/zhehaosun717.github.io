@@ -1,0 +1,3 @@
+## 2025-02-23 - Pre-calculating Squared Distances in Animation Loops
+**Learning:** In Three.js and similar high-frequency render loops (e.g., `requestAnimationFrame`), inline multiplication for squared distance thresholds (like `mouseDistance * mouseDistance`) creates redundant calculations every frame for every particle.
+**Action:** Extract and pre-calculate squared threshold constants (e.g., `mouseDistanceSq`) outside the animation loop to eliminate unnecessary math operations per frame, significantly improving performance in particle systems and physics calculations without sacrificing readability.
