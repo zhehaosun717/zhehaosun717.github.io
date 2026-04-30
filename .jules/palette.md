@@ -1,0 +1,3 @@
+## 2024-05-15 - Screen-reader labels for visual-only inputs
+**Learning:** For minimalist designs that use only placeholders for inputs, we must not omit labels altogether. Using explicitly associated `<label>` tags with a `.sr-only` class ensures screen-reader compatibility without compromising the visual layout.
+**Action:** When encountering inputs relying solely on placeholders for visual context, always ensure there's a `.sr-only` label associated with the input's explicit `id`.
