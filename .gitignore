@@ -1,3 +1,6 @@
 node_modules/
 package-lock.json
 .netlify/
+vendor/
+.bundle/
+_site/
