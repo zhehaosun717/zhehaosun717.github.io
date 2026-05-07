@@ -116,6 +116,24 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  // ── Calculate Bounds ──
+  function updateCardBounds() {
+    cards.forEach(card => {
+      if (!card.imageEl) return;
+      const rect = card.el.getBoundingClientRect();
+      card.rect = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        height: rect.height,
+      };
+      card.cx = rect.left + rect.width / 2;
+      card.cy = rect.top + rect.height / 2;
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -125,20 +143,16 @@
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      if (!card.imageEl || !card.rect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.rect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
 
-      // Card center in viewport coords
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-
       // Distance from mouse to card center
-      const dx = mouse.x - cx;
-      const dy = mouse.y - cy;
+      const dx = mouse.x - card.cx;
+      const dy = mouse.y - card.cy;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       // Is mouse hovering over the card?
@@ -209,6 +223,22 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateCardBounds(); // Initial calculation
+
+    // Resize and scroll listeners to update bounds
+    window.addEventListener('resize', updateCardBounds, { passive: true });
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateCardBounds();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
