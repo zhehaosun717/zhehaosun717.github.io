@@ -81,6 +81,7 @@
       cards.push({
         el: card,
         imageEl: imageEl,
+        rect: card.getBoundingClientRect(),
         filterId,
         turbulence: turb,
         displacement: disp,
@@ -127,7 +128,7 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.rect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +211,24 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    let ticking = false;
+    function requestUpdateRects() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          cards.forEach((c) => {
+            if (c.el) {
+              c.rect = c.el.getBoundingClientRect();
+            }
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    window.addEventListener('resize', requestUpdateRects, { passive: true });
+    window.addEventListener('scroll', requestUpdateRects, { passive: true });
+
     animate();
 
     // Pause animation when works section is not visible
