@@ -1,0 +1,3 @@
+## 2026-05-09 - Accessible Form Labels Pattern
+**Learning:** Found that visual design for contact forms heavily relies on placeholders, lacking explicit form labels, which compromises screen reader accessibility. The combination of using `for` attribute referencing the input's `id` along with the `.sr-only` class perfectly solves this accessibility issue without altering the visual design patterns intended for the form.
+**Action:** Always verify that input fields have explicit, structurally-linked `<label>` tags. When designs omit visible labels, implement explicit labels and use the `.sr-only` utility class to hide them visually while maintaining full semantic accessibility.
