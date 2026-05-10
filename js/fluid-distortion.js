@@ -28,6 +28,7 @@
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
   let animFrame = null;
+  let rectsNeedsUpdate = true;
 
   // ── Create SVG filters ──
   function createDistortionSVG() {
@@ -123,11 +124,22 @@
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
 
+    // ⚡ Bolt: Cache bounding rects to prevent layout thrashing in rAF loop
+    if (rectsNeedsUpdate) {
+      cards.forEach(card => {
+        if (card.imageEl) {
+          card.cachedRect = card.el.getBoundingClientRect();
+        }
+      });
+      rectsNeedsUpdate = false;
+    }
+
     cards.forEach((card) => {
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.cachedRect;
+      if (!rect) return;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +222,8 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('scroll', () => { rectsNeedsUpdate = true; }, { passive: true });
+    window.addEventListener('resize', () => { rectsNeedsUpdate = true; }, { passive: true });
     animate();
 
     // Pause animation when works section is not visible
