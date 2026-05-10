@@ -1,0 +1,3 @@
+## 2025-03-05 - Form Accessibility with Visual Constraints
+**Learning:** Form accessibility can be significantly improved without altering a visually constrained design (like placeholder-only fields) by using `.sr-only` class on explicit `<label>` tags linked to input `id`s. This pattern satisfies both aesthetic requirements and screen reader necessities.
+**Action:** Apply the `.sr-only` class to labels in forms where visual design relies solely on placeholders to ensure accessibility without compromising layout.
