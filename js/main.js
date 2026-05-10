@@ -28,7 +28,12 @@
       const detail = card.querySelector('.project-detail');
       if (!header || !detail) return;
 
-      header.addEventListener('click', () => {
+      // Accessibility: make header focusable and identifiable as a button
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('aria-expanded', 'false');
+
+      const toggleAccordion = () => {
         const isOpen = detail.classList.contains('expanded');
 
         // Close all
@@ -36,9 +41,27 @@
           d.classList.remove('expanded');
         });
 
+        // Update all aria-expanded attributes
+        document.querySelectorAll('.project-card-header').forEach(h => {
+          h.setAttribute('aria-expanded', 'false');
+        });
+
         // Toggle clicked
         if (!isOpen) {
           detail.classList.add('expanded');
+          header.setAttribute('aria-expanded', 'true');
+        } else {
+          header.setAttribute('aria-expanded', 'false');
+        }
+      };
+
+      header.addEventListener('click', toggleAccordion);
+
+      // Keyboard support
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); // Prevent page scroll on Space
+          toggleAccordion();
         }
       });
     });
