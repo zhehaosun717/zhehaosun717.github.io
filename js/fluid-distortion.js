@@ -28,6 +28,23 @@
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
   let animFrame = null;
+  let updateRectsTicking = false;
+
+  // ── Update cached bounding boxes ──
+  function updateRects() {
+    cards.forEach((card) => {
+      if (!card.imageEl) return;
+      card.cachedRect = card.el.getBoundingClientRect();
+    });
+    updateRectsTicking = false;
+  }
+
+  function requestRectUpdate() {
+    if (!updateRectsTicking) {
+      requestAnimationFrame(updateRects);
+      updateRectsTicking = true;
+    }
+  }
 
   // ── Create SVG filters ──
   function createDistortionSVG() {
@@ -81,6 +98,7 @@
       cards.push({
         el: card,
         imageEl: imageEl,
+        cachedRect: card.getBoundingClientRect(), // Cache rect initially
         filterId,
         turbulence: turb,
         displacement: disp,
@@ -121,13 +139,12 @@
     animFrame = requestAnimationFrame(animate);
 
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
-    const time = performance.now() * 0.001;
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      if (!card.imageEl || !card.cachedRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.cachedRect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +227,8 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('resize', requestRectUpdate, { passive: true });
+    window.addEventListener('scroll', requestRectUpdate, { passive: true });
     animate();
 
     // Pause animation when works section is not visible
