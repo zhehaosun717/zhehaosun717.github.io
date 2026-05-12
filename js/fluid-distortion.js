@@ -94,6 +94,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        rect: { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 },
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +105,15 @@
     });
 
     document.body.appendChild(svg);
+  }
+
+  // ── Update cached rects ──
+  function updateRects() {
+    cards.forEach((card) => {
+      if (card.el) {
+        card.rect = card.el.getBoundingClientRect();
+      }
+    });
   }
 
   // ── Mouse tracking ──
@@ -127,7 +137,7 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.rect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +219,11 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+
+    updateRects();
+    window.addEventListener('resize', updateRects, { passive: true });
+    window.addEventListener('scroll', updateRects, { passive: true });
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
