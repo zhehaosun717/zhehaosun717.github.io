@@ -28,17 +28,32 @@
       const detail = card.querySelector('.project-detail');
       if (!header || !detail) return;
 
-      header.addEventListener('click', () => {
+      const toggleExpand = () => {
         const isOpen = detail.classList.contains('expanded');
 
         // Close all
-        document.querySelectorAll('.project-detail.expanded').forEach(d => {
-          d.classList.remove('expanded');
+        document.querySelectorAll('.project-card').forEach(c => {
+          const d = c.querySelector('.project-detail');
+          const h = c.querySelector('.project-card-header');
+          if (d && d.classList.contains('expanded')) {
+            d.classList.remove('expanded');
+            if (h) h.setAttribute('aria-expanded', 'false');
+          }
         });
 
         // Toggle clicked
         if (!isOpen) {
           detail.classList.add('expanded');
+          header.setAttribute('aria-expanded', 'true');
+        }
+      };
+
+      header.addEventListener('click', toggleExpand);
+
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); // Prevent default scroll on Space
+          toggleExpand();
         }
       });
     });
