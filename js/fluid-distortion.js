@@ -94,6 +94,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: null,
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +105,16 @@
     });
 
     document.body.appendChild(svg);
+  }
+
+  // ── Bounding Box Caching ──
+  // Cache layout reads to prevent layout thrashing inside the animation loop
+  function updateRects() {
+    cards.forEach((card) => {
+      if (card.imageEl) {
+        card.cachedRect = card.el.getBoundingClientRect();
+      }
+    });
   }
 
   // ── Mouse tracking ──
@@ -124,10 +135,10 @@
     const time = performance.now() * 0.001;
 
     cards.forEach((card) => {
-      // Skip cards without an image container
-      if (!card.imageEl) return;
+      // Skip cards without an image container or cached rect
+      if (!card.imageEl || !card.cachedRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.cachedRect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +220,24 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+
+    // Initial rect caching
+    updateRects();
+
+    // Update rects on resize and scroll
+    window.addEventListener('resize', updateRects, { passive: true });
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateRects();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
