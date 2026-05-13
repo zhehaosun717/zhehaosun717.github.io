@@ -1,0 +1,3 @@
+## 2024-05-24 - Interactive Div Accessibility
+**Learning:** Using `div` elements for interactive accordions/cards without native semantics means keyboard users cannot interact with them, and screen readers don't know their state.
+**Action:** Always add `role="button"`, `tabindex="0"`, dynamic `aria-expanded` attributes, and `keydown` handlers for 'Enter' and 'Space' when building custom interactive components.
