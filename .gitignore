@@ -1,3 +1,14 @@
 node_modules/
 package-lock.json
 .netlify/
+vendor/
+.bundle/
+_site/
+
+vendor/
+.bundle/
+_site/
+__pycache__/
+Gemfile.lock
+test_a11y.py
+server.log

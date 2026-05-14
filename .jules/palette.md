@@ -1,0 +1,3 @@
+## 2025-05-15 - Form Accessibility Labels
+**Learning:** Visual design relying solely on placeholders causes accessibility issues for screen readers. In this app's contact form, inputs lacked explicit labels, which is a common pattern when designers want a minimalist look.
+**Action:** Always pair form inputs with explicit `<label>` tags. Use the `.sr-only` class to hide them visually if the design dictates it, ensuring screen readers can still associate the `id` with the `for` attribute.
