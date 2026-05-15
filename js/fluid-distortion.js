@@ -94,6 +94,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: card.getBoundingClientRect(), // Cache initial bounding box
       });
 
       // Apply CSS filter to image container only
@@ -116,6 +117,12 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  function updateCardRects() {
+    cards.forEach(card => {
+      card.cachedRect = card.el.getBoundingClientRect();
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -127,7 +134,7 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.cachedRect; // Use cached bounding box
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +217,8 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('scroll', updateCardRects, { passive: true });
+    window.addEventListener('resize', updateCardRects, { passive: true });
     animate();
 
     // Pause animation when works section is not visible
