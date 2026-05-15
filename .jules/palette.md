@@ -1,0 +1,3 @@
+## 2026-05-15 - Screen Reader Form Access in Minimalist Design
+**Learning:** In minimalist portfolios where visual `<label>` tags are omitted in favor of `placeholder` text (which lacks persistent context and accessibility mapping), screen readers often fail to associate the inputs correctly.
+**Action:** Use an explicit `.sr-only` CSS utility class (which visually hides elements without `display: none`) to pair robust `<label for="...">` tags with `id` mapped `<input>` elements. This satisfies WCAG guidelines and structural accessibility without compromising the intended minimal visual design system.
