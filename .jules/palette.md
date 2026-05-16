@@ -1,0 +1,3 @@
+## 2025-05-16 - Form Accessibility: Explicit Labels with sr-only
+**Learning:** This app's form visual design relies exclusively on placeholder text, which presents an accessibility issue as placeholders are insufficient for screen readers and disappear on input.
+**Action:** Use `.sr-only` explicit `<label>` elements paired with `id` attributes on inputs (`id="contact-name"`) to provide accessible names without breaking the visual design pattern.
