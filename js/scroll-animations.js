@@ -664,10 +664,27 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let rect = null;
+      let initialScrollY = 0;
+
+      // Cache bounding box on enter to prevent layout thrashing
+      el.addEventListener('mouseenter', () => {
+        rect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
+        if (!rect) {
+            rect = el.getBoundingClientRect();
+            initialScrollY = window.scrollY;
+        }
+
+        // Adjust rect top/bottom by scroll delta to support scrolling while hovering
+        const scrollDelta = window.scrollY - initialScrollY;
+        const adjustedTop = rect.top - scrollDelta;
+
         const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        const y = e.clientY - adjustedTop - rect.height / 2;
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +694,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        rect = null; // Clear cached rect
         gsap.to(el, {
           x: 0,
           y: 0,
