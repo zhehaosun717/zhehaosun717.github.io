@@ -664,10 +664,29 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let rect, initialScrollY, initialScrollX;
+
+      el.addEventListener('mouseenter', () => {
+        // Cache coordinates to prevent layout thrashing in mousemove
+        rect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+        initialScrollX = window.scrollX;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!rect) return; // safeguard
+
+        // Adjust cached bounds by current scroll differences to prevent layout thrashing
+        // and reading displaced coordinates from active transformations
+        const scrollDiffY = window.scrollY - initialScrollY;
+        const scrollDiffX = window.scrollX - initialScrollX;
+
+        const adjustedLeft = rect.left - scrollDiffX;
+        const adjustedTop = rect.top - scrollDiffY;
+
+        const x = e.clientX - adjustedLeft - rect.width / 2;
+        const y = e.clientY - adjustedTop - rect.height / 2;
+
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
