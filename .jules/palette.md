@@ -1,0 +1,3 @@
+## 2024-05-17 - Accessible Form Labels
+**Learning:** In this vanilla HTML project, contact form inputs rely entirely on placeholder text for visual labeling. This creates an accessibility gap for screen readers. Using `.sr-only` class on explicit `<label>` tags allows us to meet accessibility standards (WCAG) by explicitly pairing them with the input `id` attributes without altering the visual design layout.
+**Action:** Always ensure form inputs have explicitly paired `<label>` tags (using `for` attribute). If visual design precludes visible labels, use the `.sr-only` utility class on the label to hide it from sighted users but keep it accessible for screen readers.
