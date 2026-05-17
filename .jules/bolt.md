@@ -1,0 +1,3 @@
+## 2024-05-24 - Layout Thrashing in Magnetic Links
+**Learning:** Calling `getBoundingClientRect()` inside a `mousemove` event handler causes significant layout thrashing because it forces the browser to recalculate layout on every mouse movement. Moreover, reading bounding client rect while the element is being actively transformed by GSAP returns inaccurate coordinates, leading to jerky animations.
+**Action:** Cache the bounding box and initial scroll position (`window.scrollY` and `window.scrollX`) on `mouseenter`. Inside `mousemove`, adjust the cached bounding box coordinates using the current scroll differences (`window.scrollY - initialScrollY`), avoiding repeated `getBoundingClientRect()` calls.
