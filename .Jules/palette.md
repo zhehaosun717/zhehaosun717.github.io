@@ -1,0 +1,3 @@
+## 2025-02-28 - Explicit Form Labels
+**Learning:** This app's visual design relies heavily on placeholder text for forms. Using explicit `<label>` tags paired with the `for` attribute mapped to the input's `id` and visually hiding them with the `.sr-only` class ensures screen-reader accessibility without compromising the visual layout.
+**Action:** Always include explicit, sr-only labels for form inputs when visual design excludes visible labels, ensuring `id` attributes match the `for` attribute.
