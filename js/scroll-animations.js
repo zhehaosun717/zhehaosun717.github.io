@@ -664,10 +664,23 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let rect, initialScrollY, initialScrollX;
+
+      el.addEventListener('mouseenter', () => {
+        rect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+        initialScrollX = window.scrollX;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!rect) return;
+
+        const scrollDiffY = window.scrollY - initialScrollY;
+        const scrollDiffX = window.scrollX - initialScrollX;
+
+        const x = e.clientX - (rect.left - scrollDiffX) - rect.width / 2;
+        const y = e.clientY - (rect.top - scrollDiffY) - rect.height / 2;
+
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +690,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        rect = null;
         gsap.to(el, {
           x: 0,
           y: 0,

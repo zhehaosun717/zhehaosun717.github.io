@@ -1,0 +1,3 @@
+## 2024-05-22 - [Preventing Layout Thrashing in Magnetic Links]
+**Learning:** Calculating `getBoundingClientRect()` within a high-frequency event listener like `mousemove` combined with GSAP transform animations leads to layout thrashing and jittery animations because the element's coordinates are read while actively being displaced by the transform.
+**Action:** Cache the element's bounding box and current scroll position on `mouseenter`. During `mousemove`, use the cached coordinates adjusted by the scroll differences (`window.scrollY - initialScrollY`) rather than recalculating the bounding box.
