@@ -116,6 +116,13 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  // ── Card bounding box caching ──
+  function updateCardBounds() {
+    cards.forEach((card) => {
+      card.cachedRect = card.el.getBoundingClientRect();
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -127,7 +134,9 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // Read cached rect instead of calling getBoundingClientRect (prevents layout thrashing)
+      const rect = card.cachedRect;
+      if (!rect) return;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +218,12 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+
+    // Cache bounds initially and on resize/scroll to avoid layout thrashing
+    updateCardBounds();
+    window.addEventListener('resize', updateCardBounds, { passive: true });
+    window.addEventListener('scroll', updateCardBounds, { passive: true });
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
