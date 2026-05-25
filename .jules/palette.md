@@ -1,0 +1,3 @@
+## 2025-05-25 - Form Accessibility
+**Learning:** In the contact form, input fields were missing explicitly linked `<label>` elements. While placeholders existed, screen readers rely on `<label>` with `for` / `id` bindings to announce form fields accurately. It's crucial to provide screen-reader-only labels (`.sr-only`) when design omits visible labels to maintain visual aesthetics while adhering to a11y standards.
+**Action:** Always wrap or associate `<input>` and `<textarea>` elements with a `<label>`. When visual labels are not present, use a visually hidden element linked via `for` and `id` to ensure screen reader support.
