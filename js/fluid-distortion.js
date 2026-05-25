@@ -116,6 +116,13 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  // ── Layout Caching ──
+  function updateRects() {
+    cards.forEach((card) => {
+      card.rect = card.el.getBoundingClientRect();
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -125,9 +132,9 @@
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      if (!card.imageEl || !card.rect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.rect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,7 +216,24 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateRects();
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    let ticking = false;
+    const onScrollOrResize = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateRects();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize, { passive: true });
+
     animate();
 
     // Pause animation when works section is not visible

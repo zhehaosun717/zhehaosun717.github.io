@@ -1,0 +1,3 @@
+## 2024-05-24 - Layout thrashing in fluid distortion animation loop
+**Learning:** Calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop (like the one in `js/fluid-distortion.js`) causes severe layout thrashing because it forces the browser to synchronously recalculate layout on every frame for multiple elements.
+**Action:** Cache the bounding boxes of elements during `resize` and `scroll` events using a ticking boolean lock (to wrap updates in `requestAnimationFrame`), and read these cached values within the animation loop. This prevents per-frame layout recalculations and dramatically improves execution time.
