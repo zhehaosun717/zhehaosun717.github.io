@@ -94,6 +94,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        rect: { top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0 },
       });
 
       // Apply CSS filter to image container only
@@ -116,6 +117,13 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  function updateRects() {
+    cards.forEach(card => {
+      if (!card.el) return;
+      card.rect = card.el.getBoundingClientRect();
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -127,7 +135,7 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.rect;
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,7 +217,12 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateRects();
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('resize', updateRects, { passive: true });
+    window.addEventListener('scroll', updateRects, { passive: true });
+
     animate();
 
     // Pause animation when works section is not visible
@@ -218,6 +231,7 @@
       if (worksSection) {
         const observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
+            updateRects();
             if (!animFrame) animate();
           } else {
             if (animFrame) {
