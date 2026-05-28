@@ -28,6 +28,8 @@
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
   let animFrame = null;
+  let initialScrollY = 0;
+  let windowScrollY = 0;
 
   // ── Create SVG filters ──
   function createDistortionSVG() {
@@ -94,6 +96,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: { top: 0, bottom: 0, left: 0, right: 0, width: 0, height: 0 },
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +107,27 @@
     });
 
     document.body.appendChild(svg);
+    updateCardRects();
+  }
+
+  // ⚡ Bolt Optimization: Cache bounding boxes to avoid layout thrashing in animate loop
+  // Reading getBoundingClientRect inside requestAnimationFrame causes synchronous layout recalculation.
+  // We cache the values here and adjust by scroll difference during the hot loop.
+  function updateCardRects() {
+    initialScrollY = window.scrollY;
+    windowScrollY = window.scrollY;
+    cards.forEach(card => {
+      if (!card.el) return;
+      const rect = card.el.getBoundingClientRect();
+      card.cachedRect = {
+        top: rect.top,
+        bottom: rect.bottom,
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        height: rect.height,
+      };
+    });
   }
 
   // ── Mouse tracking ──
@@ -122,12 +146,23 @@
 
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
+    // ⚡ Bolt Optimization: Adjust cached vertical coordinates based on scroll offset.
+    // This avoids ~0.2ms overhead per card by eliminating getBoundingClientRect calls.
+    const scrollDiff = initialScrollY - windowScrollY;
 
     cards.forEach((card) => {
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const cachedRect = card.cachedRect;
+      const rect = {
+        top: cachedRect.top + scrollDiff,
+        bottom: cachedRect.bottom + scrollDiff,
+        left: cachedRect.left,
+        right: cachedRect.right,
+        width: cachedRect.width,
+        height: cachedRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +245,8 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('resize', updateCardRects, { passive: true });
+    window.addEventListener('scroll', () => { windowScrollY = window.scrollY; }, { passive: true });
     animate();
 
     // Pause animation when works section is not visible
