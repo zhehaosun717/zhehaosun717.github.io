@@ -29,6 +29,14 @@
   const cards = [];
   let animFrame = null;
 
+  function updateRects() {
+    cards.forEach((card) => {
+      if (card.el) {
+        card.rect = card.el.getBoundingClientRect();
+      }
+    });
+  }
+
   // ── Create SVG filters ──
   function createDistortionSVG() {
     if (document.getElementById('fluid-distortion-svg')) return;
@@ -127,7 +135,7 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = card.rect || card.el.getBoundingClientRect();
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +217,9 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateRects();
+    window.addEventListener('resize', updateRects, { passive: true });
+    window.addEventListener('scroll', updateRects, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
