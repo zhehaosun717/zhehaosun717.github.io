@@ -1,0 +1,3 @@
+## 2024-05-24 - Screen Reader Labels for Placeholder-Only Forms
+**Learning:** Placeholder text is not a substitute for explicit labels. Screen readers may skip placeholders or fail to associate them with the input, making forms inaccessible. Visually hiding `<label>` elements with a `.sr-only` class provides necessary semantic context for assistive technologies without disrupting the minimalist visual design.
+**Action:** Always pair inputs with explicit `<label>` elements, using `.sr-only` to hide them if the design strictly calls for placeholder-only visuals. Ensure `for` attributes match the input `id`.
