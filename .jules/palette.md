@@ -1,0 +1,3 @@
+## 2024-05-31 - Explicit Screen Reader Form Labels
+**Learning:** The contact form components in this app's design pattern previously relied on placeholders, causing an accessibility gap for screen readers; explicit `.sr-only` labels must be used for inputs lacking visible text labels.
+**Action:** Implement explicit `<label class="sr-only">` bindings paired with unique `id` and `for` attributes for all form fields to ensure screen-reader compatibility without disrupting the visual design.
