@@ -94,6 +94,9 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: card.getBoundingClientRect(),
+        initialScrollY: window.scrollY,
+        initialScrollX: window.scrollX,
       });
 
       // Apply CSS filter to image container only
@@ -127,7 +130,18 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // Calculate rect using cached values and scroll diff
+      const scrollDiffY = window.scrollY - card.initialScrollY;
+      const scrollDiffX = window.scrollX - card.initialScrollX;
+
+      const rect = {
+        top: card.cachedRect.top - scrollDiffY,
+        bottom: card.cachedRect.bottom - scrollDiffY,
+        left: card.cachedRect.left - scrollDiffX,
+        right: card.cachedRect.right - scrollDiffX,
+        width: card.cachedRect.width,
+        height: card.cachedRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -204,12 +218,21 @@
   }
 
   // ── Init ──
+  function updateCachedRects() {
+    cards.forEach(card => {
+      card.cachedRect = card.el.getBoundingClientRect();
+      card.initialScrollY = window.scrollY;
+      card.initialScrollX = window.scrollX;
+    });
+  }
+
   function init() {
     const projectCards = document.querySelectorAll('.project-card');
     if (!projectCards.length) return;
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('resize', updateCachedRects, { passive: true });
     animate();
 
     // Pause animation when works section is not visible
