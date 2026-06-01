@@ -1,0 +1,3 @@
+## 2024-06-01 - Layout Thrashing in Animation Loops
+**Learning:** Calling `getBoundingClientRect()` inside high-frequency event listeners (`mousemove`) or `requestAnimationFrame` loops causes severe layout thrashing by forcing the browser to synchronously recalculate layout. This is especially problematic in animation-heavy static sites. `scroll` is also a high-frequency event and should not be used to update layout caches.
+**Action:** Cache bounding rectangles and initial scroll positions during low-frequency events (`mouseenter`, `resize`), and calculate current positions dynamically by applying scroll differences (`window.scrollY - initialScrollY`) during high-frequency loops or handlers.
