@@ -1,0 +1,3 @@
+## 2024-06-02 - Form Labels with Netlify Honeypots
+**Learning:** In static site forms utilizing Netlify's `bot-field` honeypot structure, visible input fields must still provide explicit screen-reader labels (`<label class="sr-only">`) bound via `for` and `id` attributes. Relying solely on `placeholder` attributes breaks accessibility for screen-reader users, and the `bot-field` itself requires a distinct wrapping structure (`<p class="sr-only">`) to avoid interfering with form layout.
+**Action:** Always ensure that every visible input field in a generic contact form has an explicitly bound `<label>`, applying visually hidden classes (`.sr-only`) when visual design dictates placeholder-only aesthetics, while preserving proper `for`/`id` bindings.
