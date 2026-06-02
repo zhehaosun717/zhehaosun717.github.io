@@ -1,0 +1,3 @@
+## 2024-10-24 - Eliminated Layout Thrashing in Animation Loops
+**Learning:** Repeatedly calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop or a `mousemove` handler causes severe layout thrashing, severely degrading framerate. Reading coordinates from actively transformed elements can also yield inaccurate results.
+**Action:** Cache bounding rectangles and initial scroll positions (`window.scrollY`) during low-frequency events like `resize`, `mouseenter`, or intersection changes. Dynamically calculate current positions during high-frequency events (`scroll`, `mousemove`, `requestAnimationFrame`) using scroll differences (`window.scrollY - initialScrollY`) rather than recalculating layout.

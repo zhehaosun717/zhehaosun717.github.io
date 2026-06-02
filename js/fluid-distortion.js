@@ -94,6 +94,8 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        rectCache: null,
+        initialScrollY: 0,
       });
 
       // Apply CSS filter to image container only
@@ -116,6 +118,13 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  function updateRects() {
+    cards.forEach((card) => {
+      card.rectCache = card.el.getBoundingClientRect();
+      card.initialScrollY = window.scrollY;
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -125,9 +134,17 @@
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      if (!card.imageEl || !card.rectCache) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const scrollDiff = window.scrollY - card.initialScrollY;
+      const rect = {
+        left: card.rectCache.left,
+        right: card.rectCache.right,
+        width: card.rectCache.width,
+        height: card.rectCache.height,
+        top: card.rectCache.top - scrollDiff,
+        bottom: card.rectCache.bottom - scrollDiff,
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +226,8 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateRects();
+    window.addEventListener('resize', updateRects, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
@@ -218,6 +237,7 @@
       if (worksSection) {
         const observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
+            updateRects();
             if (!animFrame) animate();
           } else {
             if (animFrame) {
