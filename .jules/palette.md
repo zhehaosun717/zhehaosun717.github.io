@@ -1,0 +1,3 @@
+## 2026-03-05 - Missing Screen Reader Labels for Placeholder-only Forms
+**Learning:** The contact form components rely entirely on visual placeholders for field identification, creating an accessibility barrier for screen reader users as there are no explicit `<label>` associations.
+**Action:** Always pair placeholder-only inputs with explicit `<label>` elements hidden via the `.sr-only` class, explicitly bound using `for` and `id` attributes.
