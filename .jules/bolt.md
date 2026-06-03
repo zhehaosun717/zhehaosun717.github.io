@@ -1,0 +1,3 @@
+## 2024-10-24 - Eliminate Layout Thrashing in Interactive Elements
+**Learning:** Calling `getBoundingClientRect()` inside high-frequency event listeners like `mousemove` causes severe layout thrashing (synchronous reflows), especially when elements are transformed by animation libraries.
+**Action:** Cache bounding box coordinates and initial scroll positions (`window.scrollY`/`scrollX`) on low-frequency events like `mouseenter`. During high-frequency events, calculate the new position by applying the scroll differences (`window.scrollY - initialScrollY`) instead of recalculating the bounding client rect.
