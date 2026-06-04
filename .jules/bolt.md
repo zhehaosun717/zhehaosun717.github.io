@@ -1,0 +1,3 @@
+## 2024-05-24 - Layout Thrashing in Magnetic Links
+**Learning:** Calling `getBoundingClientRect()` inside a `mousemove` event handler on elements currently being animated with CSS transforms (via GSAP) causes layout thrashing and yields inaccurate coordinates, leading to jittery hover effects and wasted CPU cycles.
+**Action:** Always cache `getBoundingClientRect()` and initial scroll positions (`window.scrollY`/`scrollX`) on low-frequency events like `mouseenter`. Inside high-frequency events like `mousemove`, calculate the current position by adjusting the cached coordinates with the scroll difference (`window.scrollY - initialScrollY`).
