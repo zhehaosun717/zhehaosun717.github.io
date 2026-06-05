@@ -94,6 +94,10 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        docTop: 0,
+        docLeft: 0,
+        width: 0,
+        height: 0,
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +108,17 @@
     });
 
     document.body.appendChild(svg);
+  }
+
+  function updateRectCaches() {
+    cards.forEach(card => {
+      if (!card.el) return;
+      const rect = card.el.getBoundingClientRect();
+      card.docTop = rect.top + window.scrollY;
+      card.docLeft = rect.left + window.scrollX;
+      card.width = rect.width;
+      card.height = rect.height;
+    });
   }
 
   // ── Mouse tracking ──
@@ -127,14 +142,17 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rectTop = card.docTop - window.scrollY;
+      const rectLeft = card.docLeft - window.scrollX;
+      const rectBottom = rectTop + card.height;
+      const rectRight = rectLeft + card.width;
 
       // Skip off-screen cards (perf optimization)
-      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
+      if (rectBottom < -100 || rectTop > window.innerHeight + 100) return;
 
       // Card center in viewport coords
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
+      const cx = rectLeft + card.width / 2;
+      const cy = rectTop + card.height / 2;
 
       // Distance from mouse to card center
       const dx = mouse.x - cx;
@@ -143,8 +161,8 @@
 
       // Is mouse hovering over the card?
       const isOverCard = (
-        mouse.x >= rect.left && mouse.x <= rect.right &&
-        mouse.y >= rect.top && mouse.y <= rect.bottom
+        mouse.x >= rectLeft && mouse.x <= rectRight &&
+        mouse.y >= rectTop && mouse.y <= rectBottom
       );
       const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
       card.isNear = isOverCard || influence > 0;
@@ -161,8 +179,8 @@
 
         // 3D tilt toward mouse position (applied to IMAGE only)
         if (isOverCard) {
-          const relX = (mouse.x - rect.left) / rect.width - 0.5;
-          const relY = (mouse.y - rect.top) / rect.height - 0.5;
+          const relX = (mouse.x - rectLeft) / card.width - 0.5;
+          const relY = (mouse.y - rectTop) / card.height - 0.5;
           card.targetTiltX = -relY * CONFIG.hoverTiltMax;
           card.targetTiltY =  relX * CONFIG.hoverTiltMax;
         }
@@ -209,6 +227,8 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateRectCaches();
+    window.addEventListener('resize', updateRectCaches, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
