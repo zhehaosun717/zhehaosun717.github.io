@@ -1,0 +1,3 @@
+## 2024-06-05 - Implicit vs Explicit Form Labels for Screen Readers
+**Learning:** In the contact form, relying solely on `placeholder` text for input fields (Name, Email, Message) creates an accessibility barrier for screen readers, as placeholders are often not announced reliably or disappear upon input. Additionally, the Netlify honeypot `bot-field` uses an implicit label wrapped in a `<p class="sr-only">`, establishing a mixed accessibility pattern across the form.
+**Action:** Always implement explicit `<label>` elements with the `.sr-only` class, firmly linked to their respective input fields via matching `for` and `id` attributes. This ensures reliable screen reader announcement while preserving the intended visual design of placeholder-only fields.
