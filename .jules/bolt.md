@@ -1,0 +1,3 @@
+## 2024-05-24 - Avoid `getBoundingClientRect()` in `mousemove` Event Handlers
+**Learning:** Calling `getBoundingClientRect()` inside high-frequency event handlers like `mousemove` causes layout thrashing, severely degrading performance. Additionally, for elements being actively transformed (like magnetic links), calculating layout bounds during transformation reads displaced coordinates, creating jank.
+**Action:** Cache the bounding box on low-frequency events like `mouseenter` along with initial scroll position (`window.scrollX`/`scrollY`), and dynamically adjust the cached coordinates during `mousemove` using scroll differences (`window.scrollY - initialScrollY`) instead of recalculating the layout.
