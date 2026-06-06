@@ -664,10 +664,29 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let rect = null;
+      let initialScrollY = 0;
+      let initialScrollX = 0;
+
+      el.addEventListener('mouseenter', () => {
+        // Cache layout bounds on low-frequency event to prevent layout thrashing
+        // during mousemove, and store initial scroll to handle mid-hover scrolling.
+        rect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+        initialScrollX = window.scrollX;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!rect) return;
+
+        // Dynamically compute current layout offsets without triggering a reflow.
+        // This avoids reading displaced coordinates when the element is actively transformed.
+        const scrollDiffY = window.scrollY - initialScrollY;
+        const scrollDiffX = window.scrollX - initialScrollX;
+
+        const x = e.clientX - (rect.left - scrollDiffX) - rect.width / 2;
+        const y = e.clientY - (rect.top - scrollDiffY) - rect.height / 2;
+
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +696,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        rect = null;
         gsap.to(el, {
           x: 0,
           y: 0,
