@@ -1,0 +1,3 @@
+## 2025-02-18 - Contact Form Accessibility Pattern
+**Learning:** The contact form components in this repository's design system omit visible labels to maintain visual minimalism. They instead rely on a specific pattern of explicit `<label>` elements paired with the `.sr-only` class to remain hidden visually while providing necessary context to screen readers.
+**Action:** When adding or modifying input fields within this project's minimalistic design system, always implement the explicit `.sr-only` label binding pattern using `for` and `id` to maintain both the visual aesthetic and accessibility compliance.
