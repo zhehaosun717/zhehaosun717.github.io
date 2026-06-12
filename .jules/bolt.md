@@ -1,0 +1,3 @@
+## 2024-05-18 - Eliminate layout thrashing in mouse event handlers
+**Learning:** Calling `getBoundingClientRect()` continuously inside high-frequency event handlers like `mousemove` causes severe layout thrashing, especially when the target element is actively being transformed (e.g., by GSAP). This creates inaccurate displaced coordinates and performance bottlenecks.
+**Action:** Cache the element's bounding box and initial scroll position (`window.scrollY`/`scrollX`) on `mouseenter`. During `mousemove`, adjust the cached coordinates using current scroll differences (`window.scrollY - initialScrollY`) rather than recalculating `getBoundingClientRect()`.
