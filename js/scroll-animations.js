@@ -664,10 +664,29 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let cachedRect = null;
+      let initialScrollY = 0;
+      let initialScrollX = 0;
+
+      el.addEventListener('mouseenter', () => {
+        cachedRect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+        initialScrollX = window.scrollX;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!cachedRect) return; // Fallback just in case
+
+        // Adjust cached rect bounds by current scroll delta
+        const scrollDeltaY = window.scrollY - initialScrollY;
+        const scrollDeltaX = window.scrollX - initialScrollX;
+
+        const adjustedLeft = cachedRect.left - scrollDeltaX;
+        const adjustedTop = cachedRect.top - scrollDeltaY;
+
+        const x = e.clientX - adjustedLeft - cachedRect.width / 2;
+        const y = e.clientY - adjustedTop - cachedRect.height / 2;
+
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +696,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        cachedRect = null; // reset
         gsap.to(el, {
           x: 0,
           y: 0,
