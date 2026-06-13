@@ -664,10 +664,34 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      // ⚡ Bolt Optimization: Prevent Layout Thrashing
+      // We cache the bounding box on lower-frequency events (mouseenter) instead of high-frequency events (mousemove).
+      // Calling getBoundingClientRect() during mousemove while GSAP transforms the element forces synchronous reflows.
+      // Expected impact: Eliminates layout thrashing, reducing frame time and ensuring smooth 60fps animations.
+      let cachedRect = null;
+      let initialScrollX = 0;
+      let initialScrollY = 0;
+
+      el.addEventListener('mouseenter', () => {
+        cachedRect = el.getBoundingClientRect();
+        initialScrollX = window.scrollX;
+        initialScrollY = window.scrollY;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!cachedRect) return;
+
+        // Dynamically compute layout adjustments using current scroll position
+        // to keep coordinates accurate without recalculating getBoundingClientRect()
+        const scrollDiffX = window.scrollX - initialScrollX;
+        const scrollDiffY = window.scrollY - initialScrollY;
+
+        const adjustedLeft = cachedRect.left - scrollDiffX;
+        const adjustedTop = cachedRect.top - scrollDiffY;
+
+        const x = e.clientX - adjustedLeft - cachedRect.width / 2;
+        const y = e.clientY - adjustedTop - cachedRect.height / 2;
+
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +701,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        cachedRect = null;
         gsap.to(el, {
           x: 0,
           y: 0,
