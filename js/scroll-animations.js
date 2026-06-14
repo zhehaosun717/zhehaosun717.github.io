@@ -664,10 +664,31 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let cachedRect = null;
+      let initialScrollY = 0;
+      let initialScrollX = 0;
+
+      el.addEventListener('mouseenter', () => {
+        // ⚡ Bolt: Using cached bounding rects to prevent layout thrashing and avoid recalculating on every mousemove. Reduces layout recalculation overhead.
+        cachedRect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+        initialScrollX = window.scrollX;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!cachedRect) return;
+
+        const currentScrollY = window.scrollY;
+        const currentScrollX = window.scrollX;
+
+        const scrollDiffY = currentScrollY - initialScrollY;
+        const scrollDiffX = currentScrollX - initialScrollX;
+
+        const currentTop = cachedRect.top - scrollDiffY;
+        const currentLeft = cachedRect.left - scrollDiffX;
+
+        const x = e.clientX - currentLeft - cachedRect.width / 2;
+        const y = e.clientY - currentTop - cachedRect.height / 2;
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +698,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        cachedRect = null;
         gsap.to(el, {
           x: 0,
           y: 0,

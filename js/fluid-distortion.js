@@ -28,6 +28,18 @@
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
   let animFrame = null;
+  let initialScrollY = 0;
+  let initialScrollX = 0;
+
+  function updateCardRects() {
+    initialScrollY = window.scrollY;
+    initialScrollX = window.scrollX;
+    cards.forEach(card => {
+      if (card.el) {
+        card.cachedRect = card.el.getBoundingClientRect();
+      }
+    });
+  }
 
   // ── Create SVG filters ──
   function createDistortionSVG() {
@@ -94,6 +106,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: null,
       });
 
       // Apply CSS filter to image container only
@@ -125,9 +138,20 @@
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      if (!card.imageEl || !card.cachedRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt: Dynamically calculate current position using scroll differences to prevent layout thrashing. Drastically improves animation frame rates.
+      const scrollDiffY = window.scrollY - initialScrollY;
+      const scrollDiffX = window.scrollX - initialScrollX;
+
+      const rect = {
+        top: card.cachedRect.top - scrollDiffY,
+        bottom: card.cachedRect.bottom - scrollDiffY,
+        left: card.cachedRect.left - scrollDiffX,
+        right: card.cachedRect.right - scrollDiffX,
+        width: card.cachedRect.width,
+        height: card.cachedRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +233,8 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateCardRects();
+    window.addEventListener('resize', updateCardRects, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
@@ -218,6 +244,7 @@
       if (worksSection) {
         const observer = new IntersectionObserver((entries) => {
           if (entries[0].isIntersecting) {
+            updateCardRects();
             if (!animFrame) animate();
           } else {
             if (animFrame) {

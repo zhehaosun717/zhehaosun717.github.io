@@ -1,0 +1,3 @@
+## 2024-05-24 - Layout Thrashing in High-Frequency Events
+**Learning:** Using `getBoundingClientRect()` inside high-frequency event listeners (`mousemove`) or `requestAnimationFrame` loops (like in `fluid-distortion.js` and `scroll-animations.js`) causes severe layout thrashing. The `scroll` event is also a high-frequency event, meaning layout caches cannot be updated via a scroll listener without introducing the same thrashing.
+**Action:** Always cache bounding rectangles during low-frequency events (e.g., `resize`, `mouseenter`) and calculate dynamic positions during high-frequency cycles by using scroll differences (`window.scrollY - initialScrollY`).
