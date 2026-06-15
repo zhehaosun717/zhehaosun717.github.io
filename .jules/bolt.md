@@ -1,0 +1,3 @@
+## 2024-06-15 - Magnetic Links Layout Thrashing
+**Learning:** Using `getBoundingClientRect()` inside high-frequency event handlers like `mousemove` causes severe layout thrashing. Additionally, for actively transformed elements, dynamically recalculating the bounding box leads to inaccurate displaced coordinates.
+**Action:** Cache the element's bounding box and initial scroll position (`window.scrollY`/`scrollX`) on `mouseenter`. During `mousemove`, adjust the cached coordinates using current scroll differences (`window.scrollY - initialScrollY`) to maintain accuracy without triggering forced reflows.
