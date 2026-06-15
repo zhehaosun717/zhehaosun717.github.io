@@ -1,0 +1,3 @@
+## 2024-10-24 - Invisible Form Labels for Screen Readers
+**Learning:** Placeholders in form inputs (like 'Your Name') are not reliably read by all screen readers, leading to inaccessible forms. While floating labels are a popular UX pattern, a simpler, highly robust approach for minimalist designs is pairing explicit `<label>` elements hidden via `.sr-only` with `for` attributes that match the input `id`.
+**Action:** Always pair inputs with explicit `<label>` elements linked via `for` and `id` attributes. If visual design precludes visible labels, use a visually-hidden utility class (`.sr-only`) on the label rather than relying solely on `placeholder` or `aria-label`.
