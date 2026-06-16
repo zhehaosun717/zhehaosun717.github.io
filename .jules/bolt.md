@@ -1,0 +1,3 @@
+## 2026-06-16 - Layout Thrashing in High-Frequency Events
+**Learning:** Calling `getBoundingClientRect()` inside high-frequency event handlers (`mousemove`, `requestAnimationFrame`) causes severe layout thrashing and recalculations, especially when mixed with GSAP animations or CSS transforms on elements.
+**Action:** Cache bounding rectangles during low-frequency events (e.g., `mouseenter` or `resize`) along with initial `window.scrollX/Y`. Inside high-frequency loops, dynamically adjust the cached coordinates using current scroll differences `(window.scrollY - initialScrollY)` instead of querying the DOM again.
