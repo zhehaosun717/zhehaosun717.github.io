@@ -664,10 +664,23 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      // ⚡ Bolt: Cache bounding rect on mouseenter to prevent layout thrashing during mousemove
+      let cachedRect = null;
+      let initialScrollY = 0;
+
+      el.addEventListener('mouseenter', () => {
+        cachedRect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!cachedRect) return;
+
+        // Adjust cached rect based on scroll difference
+        const scrollDiffY = window.scrollY - initialScrollY;
+
+        const x = e.clientX - cachedRect.left - cachedRect.width / 2;
+        const y = e.clientY - (cachedRect.top - scrollDiffY) - cachedRect.height / 2;
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +690,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        cachedRect = null;
         gsap.to(el, {
           x: 0,
           y: 0,

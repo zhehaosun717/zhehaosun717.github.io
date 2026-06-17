@@ -124,10 +124,19 @@
     const time = performance.now() * 0.001;
 
     cards.forEach((card) => {
-      // Skip cards without an image container
-      if (!card.imageEl) return;
+      // Skip cards without an image container or cache
+      if (!card.imageEl || !card.cachedRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt: Use cached rect adjusted by scroll diff instead of getBoundingClientRect()
+      const scrollDiffY = window.scrollY - card.initialScrollY;
+      const rect = {
+        left: card.cachedRect.left,
+        right: card.cachedRect.right,
+        top: card.cachedRect.top - scrollDiffY,
+        bottom: card.cachedRect.bottom - scrollDiffY,
+        width: card.cachedRect.width,
+        height: card.cachedRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -203,12 +212,22 @@
     });
   }
 
+  // ⚡ Bolt: Update layout cache during resize, rather than on every frame
+  function updateLayoutCache() {
+    cards.forEach(card => {
+      card.cachedRect = card.el.getBoundingClientRect();
+      card.initialScrollY = window.scrollY;
+    });
+  }
+
   // ── Init ──
   function init() {
     const projectCards = document.querySelectorAll('.project-card');
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateLayoutCache();
+    window.addEventListener('resize', updateLayoutCache, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
