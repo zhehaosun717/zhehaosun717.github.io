@@ -664,10 +664,30 @@
     if (window.innerWidth < 769) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+      let cachedRect = null;
+      let initialScrollY = 0;
+      let initialScrollX = 0;
+
+      // ⚡ Bolt: Cache bounding box on low-frequency event to prevent layout thrashing
+      el.addEventListener('mouseenter', () => {
+        cachedRect = el.getBoundingClientRect();
+        initialScrollY = window.scrollY;
+        initialScrollX = window.scrollX;
+      });
+
       el.addEventListener('mousemove', (e) => {
-        const rect = el.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
+        if (!cachedRect) return;
+
+        // ⚡ Bolt: Calculate current rect position using scroll offsets instead of getBoundingClientRect
+        const scrollDiffY = window.scrollY - initialScrollY;
+        const scrollDiffX = window.scrollX - initialScrollX;
+
+        const adjustedLeft = cachedRect.left - scrollDiffX;
+        const adjustedTop = cachedRect.top - scrollDiffY;
+
+        const x = e.clientX - adjustedLeft - cachedRect.width / 2;
+        const y = e.clientY - adjustedTop - cachedRect.height / 2;
+
         gsap.to(el, {
           x: x * 0.25,
           y: y * 0.25,
@@ -677,6 +697,7 @@
       });
 
       el.addEventListener('mouseleave', () => {
+        cachedRect = null; // Reset cache
         gsap.to(el, {
           x: 0,
           y: 0,
