@@ -78,7 +78,11 @@
       // Find the image container — this is what we apply filter + tilt to
       const imageEl = card.querySelector('.project-card-image');
 
-      cards.push({
+      // Initial cache for layout thrashing optimization
+      const rect = card.getBoundingClientRect();
+      const scrollY = window.scrollY;
+
+      const cardData = {
         el: card,
         imageEl: imageEl,
         filterId,
@@ -94,7 +98,28 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
-      });
+        // Cache initial layout to avoid getBoundingClientRect() in animation loop
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        height: rect.height,
+        initialTop: rect.top + scrollY,
+        initialBottom: rect.bottom + scrollY,
+      };
+
+      // Update cache on mouseenter for accuracy
+      card.addEventListener('mouseenter', () => {
+        const r = card.getBoundingClientRect();
+        const sy = window.scrollY;
+        cardData.left = r.left;
+        cardData.right = r.right;
+        cardData.width = r.width;
+        cardData.height = r.height;
+        cardData.initialTop = r.top + sy;
+        cardData.initialBottom = r.bottom + sy;
+      }, { passive: true });
+
+      cards.push(cardData);
 
       // Apply CSS filter to image container only
       if (imageEl) {
@@ -116,6 +141,20 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  // ── Handle Resize to Update Cache ──
+  function onResize() {
+    const scrollY = window.scrollY;
+    cards.forEach((card) => {
+      const rect = card.el.getBoundingClientRect();
+      card.left = rect.left;
+      card.right = rect.right;
+      card.width = rect.width;
+      card.height = rect.height;
+      card.initialTop = rect.top + scrollY;
+      card.initialBottom = rect.bottom + scrollY;
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
     animFrame = requestAnimationFrame(animate);
@@ -123,18 +162,24 @@
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
 
+    const scrollY = window.scrollY;
+
     cards.forEach((card) => {
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // Dynamically calculate current position from initial layout cache using scrollY.
+      // This eliminates synchronous layout calculation getBoundingClientRect() and prevents layout thrashing.
+      // Impact: Significantly reduces main thread execution time during high-frequency animations.
+      const currentTop = card.initialTop - scrollY;
+      const currentBottom = card.initialBottom - scrollY;
 
       // Skip off-screen cards (perf optimization)
-      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
+      if (currentBottom < -100 || currentTop > window.innerHeight + 100) return;
 
       // Card center in viewport coords
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
+      const cx = card.left + card.width / 2;
+      const cy = currentTop + card.height / 2;
 
       // Distance from mouse to card center
       const dx = mouse.x - cx;
@@ -143,8 +188,8 @@
 
       // Is mouse hovering over the card?
       const isOverCard = (
-        mouse.x >= rect.left && mouse.x <= rect.right &&
-        mouse.y >= rect.top && mouse.y <= rect.bottom
+        mouse.x >= card.left && mouse.x <= card.right &&
+        mouse.y >= currentTop && mouse.y <= currentBottom
       );
       const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
       card.isNear = isOverCard || influence > 0;
@@ -161,8 +206,8 @@
 
         // 3D tilt toward mouse position (applied to IMAGE only)
         if (isOverCard) {
-          const relX = (mouse.x - rect.left) / rect.width - 0.5;
-          const relY = (mouse.y - rect.top) / rect.height - 0.5;
+          const relX = (mouse.x - card.left) / card.width - 0.5;
+          const relY = (mouse.y - currentTop) / card.height - 0.5;
           card.targetTiltX = -relY * CONFIG.hoverTiltMax;
           card.targetTiltY =  relX * CONFIG.hoverTiltMax;
         }
@@ -210,6 +255,7 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('resize', onResize, { passive: true });
     animate();
 
     // Pause animation when works section is not visible
