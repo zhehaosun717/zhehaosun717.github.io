@@ -1,0 +1,3 @@
+## 2024-05-24 - Prevent Layout Thrashing in Animation Loops
+**Learning:** Calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop causes severe layout thrashing (synchronous layout recalculations) every single frame, significantly degrading frontend performance. High-frequency events like `scroll` should not be used to update layout caches as they also cause thrashing.
+**Action:** Cache bounding rectangles during low-frequency events like `resize` or `mouseenter`. Inside high-frequency animation loops, dynamically calculate current positions using scroll differences (`initialPosition - window.scrollY`) instead of re-querying the DOM layout.
