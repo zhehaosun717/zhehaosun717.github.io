@@ -1,0 +1,3 @@
+## 2024-06-20 - Add explicit sr-only labels to contact form inputs
+**Learning:** Screen readers cannot infer field purposes from `placeholder` attributes alone. Inputs must have explicitly linked `<label>` elements (via `for` and `id` attributes) to be fully accessible, even if visually hidden using `.sr-only`.
+**Action:** Always ensure every form input has an explicitly linked `<label>`, utilizing `.sr-only` classes when visual design prevents visible labels.
