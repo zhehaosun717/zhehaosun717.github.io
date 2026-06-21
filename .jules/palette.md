@@ -1,0 +1,3 @@
+## 2024-05-20 - Explicit sr-only labels for minimalist forms
+**Learning:** Screen readers cannot consistently infer accessible names from `placeholder` attributes alone. Inputs like the contact form's Name, Email, and Message fields must have explicit `<label>` elements linked via `for` and `id` attributes. If visual design constraints prevent visible labels, applying the `.sr-only` class to the label maintains visual fidelity while ensuring full screen-reader accessibility.
+**Action:** Always pair `<input>` and `<textarea>` elements with explicit `<label>` tags linked by `id`. Use `.sr-only` on the label when minimalist UI patterns dictate the exclusion of visible labels.
