@@ -78,7 +78,7 @@
       // Find the image container — this is what we apply filter + tilt to
       const imageEl = card.querySelector('.project-card-image');
 
-      cards.push({
+      const cardObj = {
         el: card,
         imageEl: imageEl,
         filterId,
@@ -94,7 +94,16 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: null,
+        initialScrollY: 0,
+      };
+
+      card.addEventListener('mouseenter', () => {
+        cardObj.cachedRect = card.getBoundingClientRect();
+        cardObj.initialScrollY = window.scrollY;
       });
+
+      cards.push(cardObj);
 
       // Apply CSS filter to image container only
       if (imageEl) {
@@ -127,7 +136,25 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt: Prevent layout thrashing by using cached rects + scroll diff to improve main thread performance
+      let rect;
+      const currentScrollY = window.scrollY;
+
+      if (!card.cachedRect) {
+        card.cachedRect = card.el.getBoundingClientRect();
+        card.initialScrollY = currentScrollY;
+        rect = card.cachedRect;
+      } else {
+        const scrollDiff = currentScrollY - card.initialScrollY;
+        rect = {
+          left: card.cachedRect.left,
+          right: card.cachedRect.right,
+          width: card.cachedRect.width,
+          height: card.cachedRect.height,
+          top: card.cachedRect.top - scrollDiff,
+          bottom: card.cachedRect.bottom - scrollDiff
+        };
+      }
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +237,14 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    window.addEventListener('resize', () => {
+      cards.forEach(card => {
+        card.cachedRect = card.el.getBoundingClientRect();
+        card.initialScrollY = window.scrollY;
+      });
+    }, { passive: true });
+
     animate();
 
     // Pause animation when works section is not visible
