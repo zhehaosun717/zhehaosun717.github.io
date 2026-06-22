@@ -1,0 +1,3 @@
+## 2024-10-25 - Layout Thrashing in Animation Loops
+**Learning:** Calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop causes severe layout thrashing because it forces the browser to synchronously recalculate layout on every frame. In this codebase, the high-frequency scroll event exacerbated this issue when calculating project card positions for fluid distortion.
+**Action:** Cache the bounding rectangle during low-frequency events (like `resize`, `load`, or `mouseenter`) and dynamically calculate the current position using the scroll difference (`window.scrollY - initialScrollY`) instead of querying the DOM directly in the animation loop.
