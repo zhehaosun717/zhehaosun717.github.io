@@ -94,6 +94,9 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        // ⚡ Bolt: Cache bounding rect and scroll Y to avoid layout thrashing
+        baseRect: card.getBoundingClientRect(),
+        baseScrollY: window.scrollY,
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +107,14 @@
     });
 
     document.body.appendChild(svg);
+  }
+
+  // ⚡ Bolt: Cache rects on low-frequency events to avoid getBoundingClientRect in rAF
+  function updateAllCardRects() {
+    cards.forEach(card => {
+      card.baseRect = card.el.getBoundingClientRect();
+      card.baseScrollY = window.scrollY;
+    });
   }
 
   // ── Mouse tracking ──
@@ -127,7 +138,17 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt: Calculate current rect dynamically using cached baseRect and scroll diff
+      // This prevents layout thrashing by avoiding getBoundingClientRect() on every frame.
+      const scrollDiff = window.scrollY - card.baseScrollY;
+      const rect = {
+        top: card.baseRect.top - scrollDiff,
+        bottom: card.baseRect.bottom - scrollDiff,
+        left: card.baseRect.left,
+        right: card.baseRect.right,
+        width: card.baseRect.width,
+        height: card.baseRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +231,17 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    // ⚡ Bolt: Update cached rects on low-frequency events instead of inside the animation loop
+    window.addEventListener('resize', updateAllCardRects, { passive: true });
+    window.addEventListener('load', updateAllCardRects, { passive: true });
+
+    // ⚡ Bolt: Use ResizeObserver to reliably catch dynamic layout shifts without event spam
+    if ('ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver(updateAllCardRects);
+      resizeObserver.observe(document.body);
+    }
+
     animate();
 
     // Pause animation when works section is not visible
