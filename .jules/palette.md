@@ -1,0 +1,3 @@
+## 2024-06-23 - Screen Reader Labels for Contact Form
+**Learning:** Visible input fields relying solely on placeholders without explicit `<label>` tags are inaccessible to screen readers.
+**Action:** Always link explicitly created `<label>` tags with the `.sr-only` class to `<input>` and `<textarea>` elements using corresponding `for` and `id` attributes when visible labels are omitted for design reasons.
