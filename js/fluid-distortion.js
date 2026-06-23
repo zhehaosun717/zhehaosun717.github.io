@@ -29,6 +29,22 @@
   const cards = [];
   let animFrame = null;
 
+  // ⚡ Bolt Optimization: Cache bounding rects to prevent layout thrashing in rAF loop
+  function updateRectCache() {
+    cards.forEach((card) => {
+      const rect = card.el.getBoundingClientRect();
+      // Store absolute positions relative to document
+      card.cachedRect = {
+        top: rect.top + window.scrollY,
+        bottom: rect.bottom + window.scrollY,
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        height: rect.height
+      };
+    });
+  }
+
   // ── Create SVG filters ──
   function createDistortionSVG() {
     if (document.getElementById('fluid-distortion-svg')) return;
@@ -94,6 +110,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: null,
       });
 
       // Apply CSS filter to image container only
@@ -122,19 +139,24 @@
 
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
+    const currentScrollY = window.scrollY; // ⚡ Bolt: Read scroll position once per frame
 
     cards.forEach((card) => {
-      // Skip cards without an image container
-      if (!card.imageEl) return;
+      // Skip cards without an image container or cache
+      if (!card.imageEl || !card.cachedRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt Optimization: Use cached rect and calculate dynamic position based on scroll,
+      // avoiding layout thrashing from getBoundingClientRect() inside the loop.
+      // Expected impact: Eliminates forced reflows, ensuring smooth 60fps scrolling.
+      const dynamicTop = card.cachedRect.top - currentScrollY;
+      const dynamicBottom = card.cachedRect.bottom - currentScrollY;
 
       // Skip off-screen cards (perf optimization)
-      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
+      if (dynamicBottom < -100 || dynamicTop > window.innerHeight + 100) return;
 
       // Card center in viewport coords
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
+      const cx = card.cachedRect.left + card.cachedRect.width / 2;
+      const cy = dynamicTop + card.cachedRect.height / 2;
 
       // Distance from mouse to card center
       const dx = mouse.x - cx;
@@ -143,8 +165,8 @@
 
       // Is mouse hovering over the card?
       const isOverCard = (
-        mouse.x >= rect.left && mouse.x <= rect.right &&
-        mouse.y >= rect.top && mouse.y <= rect.bottom
+        mouse.x >= card.cachedRect.left && mouse.x <= card.cachedRect.right &&
+        mouse.y >= dynamicTop && mouse.y <= dynamicBottom
       );
       const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
       card.isNear = isOverCard || influence > 0;
@@ -161,8 +183,8 @@
 
         // 3D tilt toward mouse position (applied to IMAGE only)
         if (isOverCard) {
-          const relX = (mouse.x - rect.left) / rect.width - 0.5;
-          const relY = (mouse.y - rect.top) / rect.height - 0.5;
+          const relX = (mouse.x - card.cachedRect.left) / card.cachedRect.width - 0.5;
+          const relY = (mouse.y - dynamicTop) / card.cachedRect.height - 0.5;
           card.targetTiltX = -relY * CONFIG.hoverTiltMax;
           card.targetTiltY =  relX * CONFIG.hoverTiltMax;
         }
@@ -209,6 +231,11 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+
+    // ⚡ Bolt Optimization: Initialize rect cache and update on window resize
+    updateRectCache();
+    window.addEventListener('resize', updateRectCache, { passive: true });
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 

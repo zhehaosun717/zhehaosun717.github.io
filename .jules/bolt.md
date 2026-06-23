@@ -1,0 +1,3 @@
+## 2024-05-23 - Prevent Layout Thrashing in Animation Loops
+**Learning:** Using `getBoundingClientRect()` inside a `requestAnimationFrame` loop, especially for multiple elements like project cards, causes severe layout thrashing and drops frame rates, as it forces the browser to recalculate the layout on every frame. High-frequency events or loops must avoid reading layout properties directly from the DOM.
+**Action:** Always cache bounding rectangles during low-frequency events like initialization or `resize`. During the high-frequency animation loop or scroll events, calculate the dynamic element positions by subtracting the current scroll position (`window.scrollY`) from the cached absolute document positions.
