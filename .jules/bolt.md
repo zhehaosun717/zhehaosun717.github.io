@@ -1,0 +1,3 @@
+## 2025-06-25 - Caching layout geometry in animation loops
+**Learning:** Calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop causes severe layout thrashing because it forces the browser to synchronously recalculate layouts on every frame.
+**Action:** Cache element bounding rectangles using `ResizeObserver` and low-frequency events like `resize` or `load`. For scrolling, calculate dynamic positions using scroll differences (`window.scrollY - initialScrollY`) instead of querying the DOM on high-frequency events.
