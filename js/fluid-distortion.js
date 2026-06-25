@@ -78,6 +78,7 @@
       // Find the image container — this is what we apply filter + tilt to
       const imageEl = card.querySelector('.project-card-image');
 
+      // Performance optimization: cache bounding rects to prevent layout thrashing
       cards.push({
         el: card,
         imageEl: imageEl,
@@ -94,6 +95,8 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        cachedRect: null,
+        initialScrollY: 0,
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +107,16 @@
     });
 
     document.body.appendChild(svg);
+  }
+
+  // ── Cache Layout Geometry ──
+  // Updates cached rectangles and scroll offsets to prevent layout thrashing
+  function updateRects() {
+    const currentScroll = window.scrollY;
+    cards.forEach((card) => {
+      card.cachedRect = card.el.getBoundingClientRect();
+      card.initialScrollY = currentScroll;
+    });
   }
 
   // ── Mouse tracking ──
@@ -122,12 +135,22 @@
 
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
+    const currentScrollY = window.scrollY;
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      if (!card.imageEl || !card.cachedRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // Calculate dynamic position using scroll differences instead of querying the DOM
+      const scrollDiff = currentScrollY - card.initialScrollY;
+      const rect = {
+        top: card.cachedRect.top - scrollDiff,
+        bottom: card.cachedRect.bottom - scrollDiff,
+        left: card.cachedRect.left,
+        right: card.cachedRect.right,
+        width: card.cachedRect.width,
+        height: card.cachedRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -209,6 +232,15 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+    updateRects();
+
+    // Cache layout geometry on low-frequency events
+    window.addEventListener('resize', updateRects, { passive: true });
+    if ('ResizeObserver' in window) {
+      const ro = new ResizeObserver(updateRects);
+      projectCards.forEach(el => ro.observe(el));
+    }
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
