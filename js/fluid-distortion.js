@@ -43,6 +43,25 @@
     const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
     svg.appendChild(defs);
 
+
+    // ⚡ Bolt: Cache bounding rectangles using ResizeObserver to prevent layout thrashing in animation loop
+    const resizeObserver = new ResizeObserver((entries) => {
+      entries.forEach(entry => {
+        const cardObj = cards.find(c => c.el === entry.target);
+        if (cardObj) {
+          const rect = entry.target.getBoundingClientRect();
+          cardObj.baseRect = {
+            width: rect.width,
+            height: rect.height,
+            top: rect.top + window.scrollY,
+            left: rect.left + window.scrollX,
+            bottom: rect.bottom + window.scrollY,
+            right: rect.right + window.scrollX,
+          };
+        }
+      });
+    });
+
     const projectCards = document.querySelectorAll('.project-card');
     projectCards.forEach((card, i) => {
       const filterId = `fluid-warp-${i}`;
@@ -78,6 +97,8 @@
       // Find the image container — this is what we apply filter + tilt to
       const imageEl = card.querySelector('.project-card-image');
 
+      resizeObserver.observe(card);
+
       cards.push({
         el: card,
         imageEl: imageEl,
@@ -94,6 +115,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        baseRect: null,
       });
 
       // Apply CSS filter to image container only
@@ -120,14 +142,26 @@
   function animate() {
     animFrame = requestAnimationFrame(animate);
 
+
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
+    const scrollY = window.scrollY;
+    const scrollX = window.scrollX;
 
     cards.forEach((card) => {
       // Skip cards without an image container
-      if (!card.imageEl) return;
+      // ⚡ Bolt: Use cached baseRect to avoid layout thrashing
+      if (!card.imageEl || !card.baseRect) return;
 
-      const rect = card.el.getBoundingClientRect();
+      const rect = {
+        top: card.baseRect.top - scrollY,
+        bottom: card.baseRect.bottom - scrollY,
+        left: card.baseRect.left - scrollX,
+        right: card.baseRect.right - scrollX,
+        width: card.baseRect.width,
+        height: card.baseRect.height
+      };
+
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;

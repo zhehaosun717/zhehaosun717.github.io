@@ -1,0 +1,3 @@
+## 2024-05-24 - Layout Thrashing in Animation Loop
+**Learning:** Calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop that runs continuously (or frequently during scroll/mouse movement) causes severe layout thrashing and drops frames, especially when interacting with multiple elements. High-frequency events like global `mousemove` must NOT query layout directly.
+**Action:** Cache bounding rectangles using `ResizeObserver` or during low-frequency events, and dynamically calculate current positions using scroll differences (`window.scrollY` / `window.scrollX`) inside the animation loop.
