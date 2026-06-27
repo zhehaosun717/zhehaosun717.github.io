@@ -94,6 +94,13 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        // Cached layout properties to prevent layout thrashing
+        cachedWidth: 0,
+        cachedHeight: 0,
+        cachedLeft: 0,
+        cachedRight: 0,
+        cachedDocTop: 0,
+        cachedDocBottom: 0,
       });
 
       // Apply CSS filter to image container only
@@ -105,6 +112,25 @@
 
     document.body.appendChild(svg);
   }
+
+  // ── Layout Caching (Performance Optimization) ──
+  function updateLayoutCache() {
+    const scrollY = window.scrollY;
+    cards.forEach((card) => {
+      if (!card.imageEl) return;
+      const rect = card.el.getBoundingClientRect();
+      card.cachedWidth = rect.width;
+      card.cachedHeight = rect.height;
+      card.cachedLeft = rect.left;
+      card.cachedRight = rect.right;
+      card.cachedDocTop = rect.top + scrollY;
+      card.cachedDocBottom = rect.bottom + scrollY;
+    });
+  }
+
+  const resizeObserver = new ResizeObserver(() => {
+    updateLayoutCache();
+  });
 
   // ── Mouse tracking ──
   function onMouseMove(e) {
@@ -122,19 +148,26 @@
 
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
     const time = performance.now() * 0.001;
+    const scrollY = window.scrollY; // Cache scroll position to avoid thrashing
 
     cards.forEach((card) => {
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt: Use cached layout metrics instead of getBoundingClientRect() to avoid layout thrashing
+      const rectTop = card.cachedDocTop - scrollY;
+      const rectBottom = card.cachedDocBottom - scrollY;
+      const rectLeft = card.cachedLeft;
+      const rectRight = card.cachedRight;
+      const rectWidth = card.cachedWidth;
+      const rectHeight = card.cachedHeight;
 
       // Skip off-screen cards (perf optimization)
-      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
+      if (rectBottom < -100 || rectTop > window.innerHeight + 100) return;
 
       // Card center in viewport coords
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
+      const cx = rectLeft + rectWidth / 2;
+      const cy = rectTop + rectHeight / 2;
 
       // Distance from mouse to card center
       const dx = mouse.x - cx;
@@ -143,8 +176,8 @@
 
       // Is mouse hovering over the card?
       const isOverCard = (
-        mouse.x >= rect.left && mouse.x <= rect.right &&
-        mouse.y >= rect.top && mouse.y <= rect.bottom
+        mouse.x >= rectLeft && mouse.x <= rectRight &&
+        mouse.y >= rectTop && mouse.y <= rectBottom
       );
       const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
       card.isNear = isOverCard || influence > 0;
@@ -161,8 +194,8 @@
 
         // 3D tilt toward mouse position (applied to IMAGE only)
         if (isOverCard) {
-          const relX = (mouse.x - rect.left) / rect.width - 0.5;
-          const relY = (mouse.y - rect.top) / rect.height - 0.5;
+          const relX = (mouse.x - rectLeft) / rectWidth - 0.5;
+          const relY = (mouse.y - rectTop) / rectHeight - 0.5;
           card.targetTiltX = -relY * CONFIG.hoverTiltMax;
           card.targetTiltY =  relX * CONFIG.hoverTiltMax;
         }
@@ -209,6 +242,11 @@
     if (!projectCards.length) return;
 
     createDistortionSVG();
+
+    // Initial cache and observer setup
+    updateLayoutCache();
+    cards.forEach(card => resizeObserver.observe(card.el));
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     animate();
 
