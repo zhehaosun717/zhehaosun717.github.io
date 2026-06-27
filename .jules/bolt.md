@@ -1,0 +1,3 @@
+## 2024-06-27 - Prevent Layout Thrashing in Fluid Distortion Animation
+**Learning:** Calling `getBoundingClientRect()` inside a `requestAnimationFrame` loop causes severe layout thrashing (synchronous layout recalculations), especially when driven by high-frequency events like scrolling or global mouse movement.
+**Action:** Cache bounding rectangles using `ResizeObserver` or during low-frequency events, and dynamically calculate current viewport positions using scroll differences (`window.scrollY - initialScrollY`) instead of querying the DOM continuously.
