@@ -1,0 +1,3 @@
+## 2024-06-28 - Explicit labels for placeholder-only forms
+**Learning:** The contact form relied exclusively on `placeholder` attributes for accessible names, which is insufficient for many assistive technologies and fails WCAG guidelines.
+**Action:** Always pair inputs with explicit `<label>` elements. If the visual design dictates omitting visible labels, use `.sr-only` classes to provide accessible names without breaking the UI.
