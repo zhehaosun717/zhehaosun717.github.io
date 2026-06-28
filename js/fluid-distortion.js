@@ -78,6 +78,8 @@
       // Find the image container — this is what we apply filter + tilt to
       const imageEl = card.querySelector('.project-card-image');
 
+      const rect = card.getBoundingClientRect();
+
       cards.push({
         el: card,
         imageEl: imageEl,
@@ -94,6 +96,9 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        // Cache initial bounding rect and scroll position for performance (Bolt)
+        cachedRect: rect,
+        initialScrollY: window.scrollY
       });
 
       // Apply CSS filter to image container only
@@ -127,7 +132,16 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // Calculate current position using scroll differences instead of getBoundingClientRect() (Bolt)
+      const scrollDiff = window.scrollY - card.initialScrollY;
+      const rect = {
+        left: card.cachedRect.left,
+        right: card.cachedRect.right,
+        top: card.cachedRect.top - scrollDiff,
+        bottom: card.cachedRect.bottom - scrollDiff,
+        width: card.cachedRect.width,
+        height: card.cachedRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
@@ -210,6 +224,28 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    // Update cached rects on resize to prevent layout thrashing (Bolt)
+    if ('ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        entries.forEach(entry => {
+          const card = cards.find(c => c.el === entry.target);
+          if (card) {
+            card.cachedRect = card.el.getBoundingClientRect();
+            card.initialScrollY = window.scrollY;
+          }
+        });
+      });
+      projectCards.forEach(card => resizeObserver.observe(card));
+    } else {
+      window.addEventListener('resize', () => {
+        cards.forEach(card => {
+          card.cachedRect = card.el.getBoundingClientRect();
+          card.initialScrollY = window.scrollY;
+        });
+      }, { passive: true });
+    }
+
     animate();
 
     // Pause animation when works section is not visible
