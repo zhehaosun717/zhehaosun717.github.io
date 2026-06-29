@@ -78,6 +78,16 @@
       // Find the image container — this is what we apply filter + tilt to
       const imageEl = card.querySelector('.project-card-image');
 
+      const rect = card.getBoundingClientRect();
+      const docRect = {
+        top: rect.top + window.scrollY,
+        bottom: rect.bottom + window.scrollY,
+        left: rect.left,
+        right: rect.right,
+        width: rect.width,
+        height: rect.height
+      };
+
       cards.push({
         el: card,
         imageEl: imageEl,
@@ -94,6 +104,7 @@
         tiltY: 0,
         targetTiltX: 0,
         targetTiltY: 0,
+        docRect: docRect
       });
 
       // Apply CSS filter to image container only
@@ -104,6 +115,25 @@
     });
 
     document.body.appendChild(svg);
+
+    // ⚡ Bolt: Use ResizeObserver to update cached layout properties only when needed
+    // to avoid layout thrashing during scroll animations.
+    if ('ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver(() => {
+        cards.forEach(c => {
+          const r = c.el.getBoundingClientRect();
+          c.docRect = {
+            top: r.top + window.scrollY,
+            bottom: r.bottom + window.scrollY,
+            left: r.left,
+            right: r.right,
+            width: r.width,
+            height: r.height
+          };
+        });
+      });
+      document.querySelectorAll('.project-card').forEach(el => resizeObserver.observe(el));
+    }
   }
 
   // ── Mouse tracking ──
@@ -127,7 +157,17 @@
       // Skip cards without an image container
       if (!card.imageEl) return;
 
-      const rect = card.el.getBoundingClientRect();
+      // ⚡ Bolt: Use dynamically calculated positions from cached layout (docRect)
+      // to eliminate severe layout thrashing from getBoundingClientRect in requestAnimationFrame loop
+      const scrollY = window.scrollY;
+      const rect = {
+        top: card.docRect.top - scrollY,
+        bottom: card.docRect.bottom - scrollY,
+        left: card.docRect.left,
+        right: card.docRect.right,
+        width: card.docRect.width,
+        height: card.docRect.height
+      };
 
       // Skip off-screen cards (perf optimization)
       if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return;
