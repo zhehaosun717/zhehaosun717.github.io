@@ -72,10 +72,13 @@
     const bar = document.querySelector('.scroll-progress');
     if (!bar) return;
 
+    // ⚡ Bolt: Use transform instead of width to prevent layout thrashing on scroll
+    bar.style.transformOrigin = 'left center';
+
     let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
 
     window.addEventListener('scroll', () => {
-      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+      bar.style.transform = `scaleX(${window.scrollY / scrollLimit})`;
     }, { passive: true });
 
     window.addEventListener('resize', () => {
