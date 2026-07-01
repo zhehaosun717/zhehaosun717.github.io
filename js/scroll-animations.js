@@ -75,7 +75,8 @@
     let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
 
     window.addEventListener('scroll', () => {
-      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+      // ⚡ Bolt: Use GPU-composited transform instead of layout-triggering width to eliminate layout thrashing
+      bar.style.transform = `scaleX(${window.scrollY / scrollLimit})`;
     }, { passive: true });
 
     window.addEventListener('resize', () => {
