@@ -1,0 +1,3 @@
+## 2024-05-24 - Screen Reader Labels for Placeholder-only Forms
+**Learning:** Forms relying solely on `placeholder` attributes are inaccessible to screen readers because placeholders are not always reliably announced as labels and disappear when typing.
+**Action:** Always pair inputs with explicit `<label>` elements using the `for` and `id` attributes. If visual design requires hidden labels, use `.sr-only` classes to hide them visually while maintaining screen reader accessibility.
