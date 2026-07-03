@@ -74,8 +74,13 @@
 
     let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
 
+    // ⚡ Bolt Performance Optimization:
+    // Animating `width` triggers layout and paint on every scroll event, causing layout thrashing.
+    // Switched to using `transform: scaleX()` which is GPU-composited and avoids layout recalculation.
+    // Expected impact: Eliminates layout recalculations during scroll, maintaining stable 60fps.
     window.addEventListener('scroll', () => {
-      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+      const scale = window.scrollY / scrollLimit;
+      bar.style.transform = `scaleX(${scale})`;
     }, { passive: true });
 
     window.addEventListener('resize', () => {
