@@ -1,0 +1,3 @@
+## 2024-05-24 - Layout Thrashing in Scroll Progress
+**Learning:** Animating layout-triggering properties like `width` during frequent events like `scroll` causes severe layout thrashing and layout recalculations on every frame.
+**Action:** Optimize progress bars by switching to GPU-composited properties like `transform: scaleX(...)` paired with `transform-origin: left`, which avoid layout recalculation and maintain stable frame rates.
