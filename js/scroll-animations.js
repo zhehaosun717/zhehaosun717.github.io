@@ -75,7 +75,8 @@
     let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
 
     window.addEventListener('scroll', () => {
-      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+      // ⚡ Bolt: Optimizing scroll progress by using hardware-accelerated transform instead of layout-triggering width. Expected impact: eliminates layout thrashing during scroll events, improving FPS and scrolling smoothness.
+      bar.style.transform = `scaleX(${window.scrollY / scrollLimit})`;
     }, { passive: true });
 
     window.addEventListener('resize', () => {
