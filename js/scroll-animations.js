@@ -75,7 +75,8 @@
     let scrollLimit = document.documentElement.scrollHeight - window.innerHeight;
 
     window.addEventListener('scroll', () => {
-      bar.style.width = (window.scrollY / scrollLimit * 100) + '%';
+      // ⚡ Bolt: Use transform instead of width for scroll progress to prevent layout thrashing
+      bar.style.transform = `scaleX(${window.scrollY / scrollLimit})`;
     }, { passive: true });
 
     window.addEventListener('resize', () => {

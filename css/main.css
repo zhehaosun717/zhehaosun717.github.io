@@ -1072,10 +1072,13 @@ body:has(button:hover) .cursor-dot {
   top: 0;
   left: 0;
   height: 2px;
-  width: 0%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
   background: linear-gradient(90deg, var(--accent-gold), var(--accent-cyan));
   z-index: 101;
-  transition: width 0.1s linear;
+  transition: transform 0.1s linear;
+  will-change: transform;
 }
 
 /* ---------- Ambient Glow Lines ---------- */
