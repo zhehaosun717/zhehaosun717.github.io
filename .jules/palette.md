@@ -1,0 +1,3 @@
+## 2026-06-15 - Missing Accessible Form Labels
+**Learning:** Relying solely on `placeholder` attributes for form inputs creates an accessibility gap, as screen readers may not read them reliably and they disappear upon input.
+**Action:** Always pair `<input>` and `<textarea>` elements with explicit `<label>` elements using matching `for` and `id` attributes. If visual design requires hiding the label, use `.sr-only` CSS classes rather than omitting the label entirely.
