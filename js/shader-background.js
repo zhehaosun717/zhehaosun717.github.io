@@ -510,13 +510,15 @@ class ShaderBackground {
       }
     });
 
-    // Pause rendering when canvas is off-screen (scrolled past hero) — keep with Visibility pause
+    // Pause rendering when Hero leaves the viewport (canvas is position:fixed, so observing
+    // #three-canvas would stay intersecting forever). Keep alongside Page Visibility pause.
     this._isVisible = true;
-    if ('IntersectionObserver' in window && this.canvas) {
+    const hero = document.getElementById('hero');
+    if ('IntersectionObserver' in window && hero) {
       const observer = new IntersectionObserver((entries) => {
         this._isVisible = entries[0].isIntersecting;
       }, { threshold: 0.01 });
-      observer.observe(this.canvas);
+      observer.observe(hero);
     }
 
     // Listen for reduced motion changes
