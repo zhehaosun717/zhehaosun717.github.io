@@ -510,6 +510,15 @@ class ShaderBackground {
       }
     });
 
+    // Pause rendering when canvas is off-screen (scrolled past hero) — keep with Visibility pause
+    this._isVisible = true;
+    if ('IntersectionObserver' in window && this.canvas) {
+      const observer = new IntersectionObserver((entries) => {
+        this._isVisible = entries[0].isIntersecting;
+      }, { threshold: 0.01 });
+      observer.observe(this.canvas);
+    }
+
     // Listen for reduced motion changes
     if (window.matchMedia) {
       window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
@@ -527,6 +536,9 @@ class ShaderBackground {
     }
 
     this._animId = requestAnimationFrame(() => this.animate());
+
+    // Skip GPU work when canvas is not intersecting (scrolled past hero)
+    if (!this._isVisible) return;
 
     // Mobile / weak device: throttle to ~30fps for battery & GPU savings
     if (this.isMobile || this.isWeakDevice) {

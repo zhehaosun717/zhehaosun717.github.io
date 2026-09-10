@@ -1440,6 +1440,18 @@ body:has(button:hover) .cursor-dot {
   border: 0;
 }
 
+
+
+/* System cursor when custom cursor is skipped (weak desktop / reduced-motion) */
+html.system-cursor,
+html.system-cursor body,
+html.system-cursor a,
+html.system-cursor button {
+  cursor: auto !important;
+}
+html.system-cursor .cursor {
+  display: none !important;
+}
 /* ---------- Prefers Reduced Motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1466,6 +1478,7 @@ body:has(button:hover) .cursor-dot {
   .research-item,
   .about-portrait,
   .timeline-item,
+  .news-item,
   .project-card,
   .social-links,
   .contact-form {

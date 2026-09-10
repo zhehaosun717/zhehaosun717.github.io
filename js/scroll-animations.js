@@ -50,7 +50,12 @@
   /* ---------- Custom Cursor ---------- */
   function initCursor() {
     const cursor = document.getElementById('cursor');
-    if (!cursor || isMobile || isWeakDevice || isReducedMotion) return;
+    if (!cursor || isMobile || isWeakDevice || isReducedMotion) {
+      // Custom cursor skipped — restore system pointer (CSS still has cursor:none for desktop)
+      document.documentElement.classList.add('system-cursor');
+      if (cursor) cursor.style.display = 'none';
+      return;
+    }
 
     const dot = cursor.querySelector('.cursor-dot');
     const ring = cursor.querySelector('.cursor-ring');
@@ -178,16 +183,25 @@
       onLeaveBack: () => nav.classList.remove('scrolled'),
     });
 
-    // Smooth scroll links
+    // Smooth scroll links — Lenis when available, else native (weak / reduced-motion)
     nav.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', (e) => {
-        e.preventDefault();
         const target = document.querySelector(link.getAttribute('href'));
-        if (target && lenis) {
+        if (!target) return;
+        e.preventDefault();
+        if (lenis) {
           lenis.scrollTo(target, { offset: -60 });
+        } else {
+          const y = target.getBoundingClientRect().top + window.pageYOffset - 60;
+          window.scrollTo({
+            top: y,
+            behavior: isReducedMotion ? 'auto' : 'smooth',
+          });
         }
         // Close mobile menu
         document.getElementById('nav-links')?.classList.remove('open');
+        document.getElementById('nav-toggle')?.classList.remove('active');
+        document.body.style.overflow = '';
       });
     });
 
@@ -298,6 +312,78 @@
             end: 'bottom -10%',
             toggleActions: 'play reverse play reverse',
           },
+        });
+    });
+  }
+
+
+  /* ---------- News Section ---------- */
+  function animateNews() {
+    const section = document.querySelector('.news');
+    if (!section) return;
+
+    // Reduced motion: CSS already forces labels/titles visible
+    if (isReducedMotion) {
+      const label = section.querySelector('.section-label');
+      if (label) {
+        label.style.opacity = '1';
+        label.style.transform = 'none';
+      }
+      section.querySelectorAll('.section-title .text-reveal-inner').forEach((el) => {
+        el.style.transform = 'none';
+        el.style.opacity = '1';
+      });
+      section.querySelectorAll('.news-item').forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 80%',
+        end: 'bottom 10%',
+        toggleActions: 'play reverse play reverse',
+      }
+    });
+
+    const label = section.querySelector('.section-label');
+    if (label) {
+      tl.to(label, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power3.out',
+      });
+    }
+
+    const titleInners = section.querySelectorAll('.section-title .text-reveal-inner');
+    if (titleInners.length) {
+      tl.to(titleInners, {
+        y: '0%',
+        duration: 1.1,
+        stagger: 0.14,
+        ease: 'power4.out',
+      }, label ? '-=0.35' : 0);
+    }
+
+    gsap.utils.toArray(section.querySelectorAll('.news-item')).forEach((item, i) => {
+      gsap.fromTo(item,
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 90%',
+            end: 'bottom -20%',
+            toggleActions: 'play reverse play reverse',
+          },
+          delay: i * 0.06,
         });
     });
   }
@@ -782,6 +868,7 @@
     initNav();
     animateHero();
     animateAbout();
+    animateNews();
     animateResearch();
     animateWorks();
     animateWorksTitle();
