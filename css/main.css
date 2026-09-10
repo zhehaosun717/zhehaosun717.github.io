@@ -370,6 +370,10 @@ body:has(button:hover) .cursor-dot {
   width: 100%;
 }
 
+.about .section-title {
+  margin-bottom: 2.25rem;
+}
+
 .section-label {
   font-size: 0.7rem;
   letter-spacing: 0.3em;
@@ -765,6 +769,55 @@ body:has(button:hover) .cursor-dot {
 }
 
 /* ---------- Research Section ---------- */
+/* ---------- News (optional strip; hide on mobile by default) ---------- */
+.news {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.news .section-title {
+  margin-bottom: 1.5rem;
+}
+
+.news-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.news-item {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+}
+
+.news-year {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+
+.news-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.news-text em {
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+
 .research {
   max-width: 900px;
   margin: 0 auto;
@@ -772,11 +825,21 @@ body:has(button:hover) .cursor-dot {
 }
 
 .research-group {
-  margin-top: 2.5rem;
+  margin-top: 3.25rem;
 }
 
 .research-group:first-of-type {
   margin-top: 1.5rem;
+}
+
+.research-group .research-item {
+  margin-bottom: 0.35rem;
+}
+
+.presenter-role {
+  font-weight: 400;
+  opacity: 0.72;
+  letter-spacing: 0.02em;
 }
 
 .research-category-heading {
@@ -1276,6 +1339,10 @@ body:has(button:hover) .cursor-dot {
   }
 
   /* --- Layout --- */
+  .news--hide-mobile {
+    display: none !important;
+  }
+
   .about-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
