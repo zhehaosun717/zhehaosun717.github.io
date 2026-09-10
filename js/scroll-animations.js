@@ -12,13 +12,19 @@
   // Reduce ScrollTrigger overhead during fast scrolling
   ScrollTrigger.config({ limitCallbacks: true });
 
+  /* ---------- Device & Motion Checks ---------- */
+  const isMobile = window.innerWidth < 769 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isWeakDevice = isMobile ||
+    (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) ||
+    (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4);
+  let isReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   /* ---------- Lenis Smooth Scroll ---------- */
   let lenis;
-  const isMobile = window.innerWidth < 769;
 
   function initLenis() {
-    // Disable Lenis on mobile — native scroll is smoother on iOS Safari
-    if (isMobile) return;
+    // Disable Lenis on mobile, weak devices, or reduced motion — native scroll is lighter and more responsive
+    if (isMobile || isWeakDevice || isReducedMotion) return;
 
     lenis = new Lenis({
       duration: 1.4,
@@ -31,12 +37,20 @@
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
+
+    // Page Visibility: pause Lenis when tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (lenis) {
+        if (document.hidden) lenis.stop();
+        else lenis.start();
+      }
+    });
   }
 
   /* ---------- Custom Cursor ---------- */
   function initCursor() {
     const cursor = document.getElementById('cursor');
-    if (!cursor || window.innerWidth < 769) return;
+    if (!cursor || isMobile || isWeakDevice || isReducedMotion) return;
 
     const dot = cursor.querySelector('.cursor-dot');
     const ring = cursor.querySelector('.cursor-ring');
@@ -45,6 +59,7 @@
     let mouseY = window.innerHeight / 2;
     let dotX = mouseX, dotY = mouseY;
     let ringX = mouseX, ringY = mouseY;
+    let cursorAnimId = null;
 
     document.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
@@ -52,6 +67,11 @@
     });
 
     function animateCursor() {
+      if (document.hidden) {
+        cursorAnimId = null;
+        return;
+      }
+
       // Dot follows mouse tightly
       dotX += (mouseX - dotX) * 0.35;
       dotY += (mouseY - dotY) * 0.35;
@@ -62,9 +82,23 @@
       ringY += (mouseY - ringY) * 0.12;
       ring.style.transform = `translate(${ringX - 20}px, ${ringY - 20}px)`;
 
-      requestAnimationFrame(animateCursor);
+      cursorAnimId = requestAnimationFrame(animateCursor);
     }
-    animateCursor();
+    cursorAnimId = requestAnimationFrame(animateCursor);
+
+    // Page Visibility: pause cursor loop when tab is hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (cursorAnimId) {
+          cancelAnimationFrame(cursorAnimId);
+          cursorAnimId = null;
+        }
+      } else {
+        if (!cursorAnimId && !isReducedMotion) {
+          cursorAnimId = requestAnimationFrame(animateCursor);
+        }
+      }
+    });
   }
 
   /* ---------- Scroll Progress Bar ---------- */
@@ -89,6 +123,14 @@
       const counter = document.getElementById('loader-counter');
       const loader = document.getElementById('loader');
       if (!counter || !loader) { resolve(); return; }
+
+      // Skip loader wait time on reduced motion
+      if (isReducedMotion) {
+        loader.classList.add('loaded');
+        loader.style.display = 'none';
+        resolve();
+        return;
+      }
 
       const obj = { val: 0 };
       gsap.to(obj, {
@@ -164,6 +206,15 @@
 
   /* ---------- Hero Text Reveal (Clip Mask) ---------- */
   function animateHero() {
+    if (isReducedMotion) {
+      document.querySelectorAll('.hero .text-reveal-inner').forEach(el => {
+        el.style.transform = 'none';
+      });
+      const indicator = document.querySelector('.scroll-indicator');
+      if (indicator) indicator.style.opacity = '1';
+      return;
+    }
+
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
     // Title: each word slides up from behind the mask
@@ -455,7 +506,15 @@
     const section = document.querySelector('.research');
     if (!section) return;
 
-    // Section label & title with clip reveal
+    if (isReducedMotion) {
+      document.querySelectorAll('.research-item').forEach(item => {
+        item.style.opacity = '1';
+        item.style.transform = 'none';
+        item.classList.add('revealed');
+      });
+      return;
+    }
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -495,8 +554,10 @@
             start: 'top 92%',
             end: 'bottom -20%',
             toggleActions: 'play reverse play reverse',
+            onEnter: () => item.classList.add('revealed'),
+            onLeaveBack: () => item.classList.remove('revealed'),
           },
-          delay: i * 0.08,
+          delay: i * 0.06,
         });
     });
   }
@@ -661,7 +722,7 @@
 
   /* ---------- Magnetic Hover Effect on Links ---------- */
   function initMagneticLinks() {
-    if (window.innerWidth < 769) return;
+    if (window.innerWidth < 769 || isWeakDevice || isReducedMotion) return;
 
     document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
       el.addEventListener('mousemove', (e) => {

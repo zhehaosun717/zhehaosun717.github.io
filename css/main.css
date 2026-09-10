@@ -771,24 +771,61 @@ body:has(button:hover) .cursor-dot {
   width: 100%;
 }
 
+.research-group {
+  margin-top: 2.5rem;
+}
+
+.research-group:first-of-type {
+  margin-top: 1.5rem;
+}
+
+.research-category-heading {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.research-category-heading::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+}
+
 .research-list {
-  margin-top: 2rem;
+  margin-top: 0.5rem;
 }
 
 .research-item {
-  padding: 1.5rem 0 1.5rem 2rem;
+  padding: 1.25rem 0 1.25rem 1.75rem;
   border-left: 1px solid rgba(201, 168, 76, 0.15);
   position: relative;
   opacity: 0;
   transform: translateX(-25px);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
+  transition: border-color 0.3s ease;
+}
+
+.research-item:hover {
+  border-left-color: rgba(201, 168, 76, 0.4);
 }
 
 .research-item::before {
   content: '';
   position: absolute;
   left: -3px;
-  top: 1.8rem;
+  top: 1.5rem;
   width: 5px;
   height: 5px;
   border-radius: 50%;
@@ -813,7 +850,7 @@ body:has(button:hover) .cursor-dot {
   font-size: 0.95rem;
   line-height: 1.6;
   color: var(--text-primary);
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.35rem;
 }
 
 .research-title .author-highlight {
@@ -822,21 +859,76 @@ body:has(button:hover) .cursor-dot {
 }
 
 .research-venue {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
   font-style: italic;
+  line-height: 1.5;
 }
 
+.pub-doi,
+.pub-venue-link {
+  margin-top: 0.35rem;
+}
+
+.pub-doi a,
+.pub-venue-link a,
 .research-link {
   display: inline-block;
-  font-size: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
   color: var(--accent-cyan);
-  margin-top: 0.4rem;
-  transition: color 0.3s ease;
+  text-decoration: none;
+  opacity: 0.9;
+  transition: all 0.25s ease;
+  word-break: break-all;
 }
 
+.pub-doi a:hover,
+.pub-venue-link a:hover,
 .research-link:hover {
   color: var(--accent-gold);
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.pub-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.pub-tag {
+  font-size: 0.68rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pub-tag.journal {
+  background: rgba(86, 200, 216, 0.12);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(86, 200, 216, 0.25);
+}
+
+.pub-tag.conf {
+  background: rgba(139, 92, 246, 0.12);
+  color: #a78bfa;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+}
+
+.pub-tag.chapter {
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--accent-gold);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+}
+
+.pub-tag.inpress {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
 /* ---------- Contact Section ---------- */
@@ -1214,12 +1306,14 @@ body:has(button:hover) .cursor-dot {
     height: 22px;
   }
 
-  .research-link {
+  .research-link,
+  .pub-doi a,
+  .pub-venue-link a {
     font-size: 0.85rem;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0.5rem;
     display: inline-block;
     min-height: 44px;
-    line-height: 2;
+    line-height: 1.8;
   }
 
   .research-item {
@@ -1277,4 +1371,46 @@ body:has(button:hover) .cursor-dot {
   clip: rect(0,0,0,0);
   white-space: nowrap;
   border: 0;
+}
+
+/* ---------- Prefers Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cursor {
+    display: none !important;
+  }
+
+  .text-reveal-inner {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .section-label,
+  .scroll-indicator,
+  .portrait-frame,
+  .research-item,
+  .about-portrait,
+  .timeline-item,
+  .project-card,
+  .social-links,
+  .contact-form {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .scroll-line {
+    animation: none !important;
+  }
+
+  .loader {
+    display: none !important;
+  }
 }

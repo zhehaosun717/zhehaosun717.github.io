@@ -95,7 +95,7 @@
   function initTouchRipple() {
     if (window.innerWidth >= 769) return; // Desktop doesn't need ripple
 
-    const targets = document.querySelectorAll('.form-submit, .social-link, .nav-links a, .research-link');
+    const targets = document.querySelectorAll('.form-submit, .social-link, .nav-links a, .research-link, .pub-doi a, .pub-venue-link a');
     targets.forEach(el => {
       el.classList.add('touch-ripple');
       el.addEventListener('pointerdown', (e) => {

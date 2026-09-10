@@ -1,0 +1,57 @@
+# Academic Publications Data
+# UX Reference: https://yuanyxubc.github.io/
+
+journal:
+  - title: "From Engagement to Resilience: A Systematic Review of Game-Based Learning for Environmental Resilience"
+    authors: "Xu, Y., Sun, Z., Zhen, C., Lin, Y.-S., Sarker, T. H., Thorogood, M., Lasserre, P., & Dulic, A."
+    venue: "Sustainability, 18(5), 2305"
+    year: 2026
+    doi: "https://doi.org/10.3390/su18052305"
+    doi_display: "doi.org/10.3390/su18052305"
+    type: "Journal"
+
+conference:
+  - title: "Struggle as Flow: Challenge, Design, and Experience in Soulslike Games"
+    authors: "Sun, Z. (Presenter), Xu, Y., Zhen, C., Lin, Y.-S., Thorogood, M., Lasserre, P., Dulic, A., & Smith, M."
+    venue: "Lecture Notes in Computer Science (HCI International 2026). Springer, Cham"
+    year: 2026
+    doi: "https://doi.org/10.1007/978-3-032-30405-6_15"
+    doi_display: "doi.org/10.1007/978-3-032-30405-6_15"
+    type: "Book Chapter"
+
+  - title: "Mapping Ecological Empathy: A Semantic Network Analysis of Player Perceptions in 3D Environmental Education Games"
+    authors: "Xu, Y., Sun, Z., Zhen, C., Lin, Y.-S., Thorogood, M., Smith, M., Lasserre, P., & Dulic, A."
+    venue: "Lecture Notes in Computer Science (HCI International 2026). Springer, Cham"
+    year: 2026
+    doi: "https://doi.org/10.1007/978-3-032-30405-6_16"
+    doi_display: "doi.org/10.1007/978-3-032-30405-6_16"
+    type: "Book Chapter"
+
+  - title: "Re-evaluating the Pursuit of Hyper-Realism in Virtual Reality Game Design Through the Lens of Ludoproprioceptive Dissonance"
+    authors: "Sun, Z. (Presenter), Xu, Y., Lin, Y.-S., Lasserre, P., Dulic, A., & Smith, M."
+    venue: "Proceedings of the 2026 Digital Games Research Association Conference (DiGRA 2026). Ireland"
+    year: 2026
+    venue_url: "https://digra.org/"
+    type: "Conference"
+
+  - title: "The Absent Teacher in Eco-Games: A Theoretical Framework for Teacher Integration in Eco-Games"
+    authors: "Xu, Y., Sun, Z., Lin, Y.-S., Lasserre, P., & Dulic, A."
+    venue: "Proceedings of the 2026 Digital Games Research Association Conference (DiGRA 2026). Ireland"
+    year: 2026
+    venue_url: "https://digra.org/"
+    type: "Conference"
+
+forthcoming:
+  - title: "\"You Were Never Meant to Win\": A Taxonomy of Scripted Loss in Digital Games"
+    authors: "Sun, Z., Xu, Y., Zhen, C., & Smith, M."
+    venue: "ACM CHI PLAY 2026"
+    year: 2026
+    status: "In Press"
+    type: "Conference"
+
+  - title: "Sound as the Score: Designing Progressive Audio Layering as Embodied Music Reward"
+    authors: "Zhen, C., Xu, Y., Sun, Z., Dulic, A., & Thorogood, M."
+    venue: "ACM CHI PLAY 2026"
+    year: 2026
+    status: "In Press"
+    type: "Conference"
