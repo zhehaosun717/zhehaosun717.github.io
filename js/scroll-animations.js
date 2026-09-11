@@ -677,15 +677,19 @@
         y: 0,
         duration: 0.9,
         ease: 'power3.out',
-      }, '-=0.25')
-    .fromTo(section.querySelector('.contact-form'),
-      { opacity: 0, y: 35 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-      }, '-=0.4');
+      }, '-=0.25');
+
+    const email = section.querySelector('.contact-email');
+    if (email) {
+      tl.fromTo(email,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power3.out',
+        }, '-=0.35');
+    }
 
     // Individual social links — staggered bounce-in
     gsap.utils.toArray('.social-link').forEach((link, i) => {
@@ -704,25 +708,6 @@
             toggleActions: 'play reverse play reverse',
           },
           delay: i * 0.08,
-        });
-    });
-
-    // Form inputs — staggered slide-up
-    gsap.utils.toArray('.form-group').forEach((group, i) => {
-      gsap.fromTo(group,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: section.querySelector('.contact-form'),
-            start: 'top 90%',
-            end: 'bottom -20%',
-            toggleActions: 'play reverse play reverse',
-          },
-          delay: i * 0.1,
         });
     });
   }
@@ -810,7 +795,7 @@
   function initMagneticLinks() {
     if (window.innerWidth < 769 || isWeakDevice || isReducedMotion) return;
 
-    document.querySelectorAll('.social-link, .project-link, .form-submit').forEach(el => {
+    document.querySelectorAll('.social-link, .project-link, .contact-email a').forEach(el => {
       el.addEventListener('mousemove', (e) => {
         const rect = el.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
