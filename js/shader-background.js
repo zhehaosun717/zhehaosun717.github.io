@@ -11,12 +11,21 @@
 class ShaderBackground {
   constructor() {
     this.canvas = document.getElementById('three-canvas');
-    this.isMobile = window.innerWidth < 769;
+    const isMobile = window.innerWidth < 769 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isWeak = isMobile ||
+      (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) ||
+      (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4);
+    this.isMobile = isMobile;
+    this.isWeakDevice = isWeak;
+    this.reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.mouse = { x: 0.5, y: 0.5, targetX: 0.5, targetY: 0.5 };
     this.mouseVelocity = { x: 0, y: 0 };
     this.prevMouse = { x: 0.5, y: 0.5 };
     this.scrollProgress = 0;
     this.clock = new THREE.Clock();
+    this._isPaused = false;
+    this._animId = null;
+    this._lastFrame = 0;
     this.init();
   }
 
@@ -28,11 +37,12 @@ class ShaderBackground {
       canvas: this.canvas,
       antialias: false,
       alpha: false,
-      powerPreference: this.isMobile ? 'low-power' : 'high-performance',
+      powerPreference: (this.isMobile || this.isWeakDevice) ? 'low-power' : 'high-performance',
     });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    // Mobile: cap pixel ratio at 1.0 for GPU savings
-    this.renderer.setPixelRatio(this.isMobile ? 1.0 : Math.min(window.devicePixelRatio, 1.5));
+    // Cap pixel ratio: 1.0 on mobile / weak devices, max 1.5 on normal desktop
+    const maxDPR = (this.isMobile || this.isWeakDevice) ? 1.0 : 1.5;
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDPR));
 
     this.createMouseFBO();
     this.createShaderMesh();
@@ -47,7 +57,7 @@ class ShaderBackground {
 
   /* ========== FBO MOUSE TRAIL (Homunculus-style brush buffer) ========== */
   createMouseFBO() {
-    const rtSize = this.isMobile ? 256 : 512;
+    const rtSize = (this.isMobile || this.isWeakDevice) ? 256 : 512;
     const rtOpts = {
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
@@ -159,7 +169,7 @@ class ShaderBackground {
       }
     `;
 
-    const fbmIter = this.isMobile ? 3 : 5;
+    const fbmIter = (this.isMobile || this.isWeakDevice) ? 3 : 5;
 
     const fragmentShader = `
       precision highp float;
@@ -476,47 +486,87 @@ class ShaderBackground {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+        const maxDPR = (this.isMobile || this.isWeakDevice) ? 1.0 : 1.5;
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDPR));
         this.material.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         this.updateScrollLimit();
       }, 150);
     });
 
-    // Pause rendering when canvas is not visible (huge perf win when scrolled past hero)
+    // Page Visibility API: pause animation loop when tab is hidden to save CPU/GPU
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this._isPaused = true;
+        if (this._animId) {
+          cancelAnimationFrame(this._animId);
+          this._animId = null;
+        }
+      } else {
+        if (this._isPaused) {
+          this._isPaused = false;
+          this.clock.start();
+          this.animate();
+        }
+      }
+    });
+
+    // Pause rendering when Hero leaves the viewport (canvas is position:fixed, so observing
+    // #three-canvas would stay intersecting forever). Keep alongside Page Visibility pause.
     this._isVisible = true;
-    if ('IntersectionObserver' in window) {
+    const hero = document.getElementById('hero');
+    if ('IntersectionObserver' in window && hero) {
       const observer = new IntersectionObserver((entries) => {
         this._isVisible = entries[0].isIntersecting;
       }, { threshold: 0.01 });
-      observer.observe(this.canvas);
+      observer.observe(hero);
+    }
+
+    // Listen for reduced motion changes
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+        this.reducedMotion = e.matches;
+      });
     }
   }
 
   /* ========== RENDER LOOP ========== */
   animate() {
-    requestAnimationFrame(() => this.animate());
+    // Pause rendering entirely when document is hidden (Page Visibility)
+    if (document.hidden) {
+      this._isPaused = true;
+      return;
+    }
 
-    // Skip rendering entirely when canvas is not visible (scrolled past hero)
+    this._animId = requestAnimationFrame(() => this.animate());
+
+    // Skip GPU work when canvas is not intersecting (scrolled past hero)
     if (!this._isVisible) return;
 
-    // Mobile: throttle to ~30fps for battery savings
-    if (this.isMobile) {
-      if (!this._lastFrame) this._lastFrame = 0;
+    // Mobile / weak device: throttle to ~30fps for battery & GPU savings
+    if (this.isMobile || this.isWeakDevice) {
       const now = performance.now();
       if (now - this._lastFrame < 33) return;
       this._lastFrame = now;
     }
 
-    // MUCH MORE RESPONSIVE mouse tracking (0.12 instead of 0.06)
-    this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.12;
-    this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.12;
+    // Responsive mouse tracking (gentler on reduced motion)
+    const lerpSpeed = this.reducedMotion ? 0.04 : 0.12;
+    this.mouse.x += (this.mouse.targetX - this.mouse.x) * lerpSpeed;
+    this.mouse.y += (this.mouse.targetY - this.mouse.y) * lerpSpeed;
 
-    // Track velocity
-    this.mouseVelocity.x = this.mouse.x - this.prevMouse.x;
-    this.mouseVelocity.y = this.mouse.y - this.prevMouse.y;
+    // Track velocity (zeroed out on reduced motion to eliminate rapid turbulence)
+    if (this.reducedMotion) {
+      this.mouseVelocity.x = 0;
+      this.mouseVelocity.y = 0;
+    } else {
+      this.mouseVelocity.x = this.mouse.x - this.prevMouse.x;
+      this.mouseVelocity.y = this.mouse.y - this.prevMouse.y;
+    }
     this.prevMouse.x = this.mouse.x;
     this.prevMouse.y = this.mouse.y;
 
-    const elapsed = this.clock.getElapsedTime();
+    // Lighter, gentle ambient flow when prefers-reduced-motion is active
+    const elapsed = this.clock.getElapsedTime() * (this.reducedMotion ? 0.3 : 1.0);
 
     // ── PASS 1: Mouse trail FBO ──
     const activeRT = this.renderMouseFBO();
@@ -525,7 +575,7 @@ class ShaderBackground {
     this.material.uniforms.uTime.value = elapsed;
     this.material.uniforms.uMouse.value.set(this.mouse.x, this.mouse.y);
     this.material.uniforms.uMouseVelocity.value.set(this.mouseVelocity.x, this.mouseVelocity.y);
-    // Faster scroll response too (0.08 instead of 0.05)
+    // Smooth scroll response
     this.material.uniforms.uScrollProgress.value +=
       (this.scrollProgress - this.material.uniforms.uScrollProgress.value) * 0.08;
     this.material.uniforms.uMouseTrail.value = activeRT.texture;

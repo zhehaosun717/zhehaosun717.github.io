@@ -3,6 +3,13 @@ document.addEventListener('DOMContentLoaded', function () {
     return;
   }
 
+  // 弱设备与减弱动态偏好检测
+  const isMobile = window.innerWidth < 769 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isWeakDevice = isMobile ||
+    (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) ||
+    (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4);
+  let isReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // 初始化场景
   const scene = new THREE.Scene();
   // 保持背景色为深色，突出余烬效果
@@ -15,15 +22,18 @@ document.addEventListener('DOMContentLoaded', function () {
   // 初始化渲染器
   const renderer = new THREE.WebGLRenderer({ 
     canvas: document.getElementById('three-bg'), 
-    antialias: true,
-    alpha: true
+    antialias: false,
+    alpha: true,
+    powerPreference: (isMobile || isWeakDevice) ? 'low-power' : 'high-performance'
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // 限制 DPR: 弱设备/移动端为 1.0，桌面最高 1.5
+  const maxDPR = (isMobile || isWeakDevice) ? 1.0 : 1.5;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDPR));
 
-  // 粒子系统参数
-  const particlesCount = 2000;
-  const connectionDistance = 15; // 稍微减小连接距离，使效果更精致
+  // 粒子系统参数 (弱设备自适应缩减以提升性能)
+  const particlesCount = (isMobile || isWeakDevice) ? 700 : 2000;
+  const connectionDistance = (isMobile || isWeakDevice) ? 10 : 15;
   const mouseDistance = 25;
   
   // 几何体和材质
@@ -103,12 +113,33 @@ document.addEventListener('DOMContentLoaded', function () {
   const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
   const mouse3D = new THREE.Vector3();
 
+  let animId = null;
+  let lastFrame = 0;
+
   function animate() {
-    requestAnimationFrame(animate);
+    // 页面隐藏时暂停动画循环 (Page Visibility)
+    if (document.hidden) {
+      animId = null;
+      return;
+    }
+
+    animId = requestAnimationFrame(animate);
+
+    // 弱设备帧率节流至约 30fps
+    if (isMobile || isWeakDevice) {
+      const now = performance.now();
+      if (now - lastFrame < 33) return;
+      lastFrame = now;
+    }
     
-    // 相机跟随鼠标轻微移动
-    targetX = mouseX * 0.0005;
-    targetY = mouseY * 0.0005;
+    // 相机跟随鼠标轻微移动 (减弱动态模式下禁用微晃)
+    if (isReducedMotion) {
+      targetX = 0;
+      targetY = 0;
+    } else {
+      targetX = mouseX * 0.0005;
+      targetY = mouseY * 0.0005;
+    }
     camera.position.x += (targetX - camera.position.x) * 0.05;
     camera.position.y += (-targetY - camera.position.y) * 0.05;
     camera.lookAt(scene.position);
@@ -118,18 +149,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const positions = particlesGeometry.attributes.position.array;
     let lineVertexIndex = 0;
+    const speedMult = isReducedMotion ? 0.25 : 1.0;
 
     // 更新粒子位置
     for (let i = 0; i < particlesCount; i++) {
       const i3 = i * 3;
 
       // 1. 应用速度 (主要是向上)
-      positions[i3] += velocityArray[i3];
-      positions[i3 + 1] += velocityArray[i3 + 1];
-      positions[i3 + 2] += velocityArray[i3 + 2];
+      positions[i3] += velocityArray[i3] * speedMult;
+      positions[i3 + 1] += velocityArray[i3 + 1] * speedMult;
+      positions[i3 + 2] += velocityArray[i3 + 2] * speedMult;
 
       // 2. 循环重置机制 (Rising Embers 核心逻辑)
-      // 如果粒子超出了顶部边界 (50)，重置到底部 (-50)
+      // 如果粒子超出了顶部边界 (60)，重置到底部 (-60)
       if (positions[i3 + 1] > 60) {
          positions[i3 + 1] = -60;
          // 随机化 X 和 Z 位置，防止出现明显的“波浪”重复
@@ -137,19 +169,19 @@ document.addEventListener('DOMContentLoaded', function () {
          positions[i3 + 2] = (Math.random() - 0.5) * 80;
       }
 
-      // 3. 鼠标交互 (扰动/推开)
-      // 当鼠标靠近时，粒子会受到扰动，模拟气流
-      const dx = mouse3D.x - positions[i3];
-      const dy = mouse3D.y - positions[i3 + 1];
-      const dz = mouse3D.z - positions[i3 + 2];
-      const distSq = dx*dx + dy*dy + dz*dz;
+      // 3. 鼠标交互 (扰动/推开，减弱动态模式下柔化)
+      if (!isReducedMotion) {
+        const dx = mouse3D.x - positions[i3];
+        const dy = mouse3D.y - positions[i3 + 1];
+        const dz = mouse3D.z - positions[i3 + 2];
+        const distSq = dx*dx + dy*dy + dz*dz;
 
-      if (distSq < mouseDistance * mouseDistance) {
-        const force = (mouseDistance * mouseDistance - distSq) / (mouseDistance * mouseDistance);
-        // 主要是水平推开，模拟手穿过烟雾
-        positions[i3] -= dx * force * 0.05;
-        positions[i3 + 1] -= dy * force * 0.05;
-        positions[i3 + 2] -= dz * force * 0.05;
+        if (distSq < mouseDistance * mouseDistance) {
+          const force = (mouseDistance * mouseDistance - distSq) / (mouseDistance * mouseDistance);
+          positions[i3] -= dx * force * 0.05;
+          positions[i3 + 1] -= dy * force * 0.05;
+          positions[i3 + 2] -= dz * force * 0.05;
+        }
       }
 
       // 连线逻辑
@@ -165,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
          if (distSq2 < connectionDistance * connectionDistance) {
             if (lineVertexIndex < maxConnections * 3 - 6) {
-                // 根据高度淡化连线 (可选：顶部连线更少？暂不实现以保持简单)
                linePositions[lineVertexIndex++] = positions[i3];
                linePositions[lineVertexIndex++] = positions[i3+1];
                linePositions[lineVertexIndex++] = positions[i3+2];
@@ -183,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
     linesGeometry.attributes.position.needsUpdate = true;
 
     // 整体轻微旋转
-    scene.rotation.y += 0.0002;
+    scene.rotation.y += (isReducedMotion ? 0.00005 : 0.0002);
 
     renderer.render(scene, camera);
   }
@@ -194,8 +225,29 @@ document.addEventListener('DOMContentLoaded', function () {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const maxDPR = (isMobile || isWeakDevice) ? 1.0 : 1.5;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDPR));
     windowHalfX = window.innerWidth / 2;
     windowHalfY = window.innerHeight / 2;
   });
+
+  // Page Visibility API: 切换标签页时暂停渲染
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    } else {
+      if (!animId) {
+        animate();
+      }
+    }
+  });
+
+  if (window.matchMedia) {
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+      isReducedMotion = e.matches;
+    });
+  }
 });

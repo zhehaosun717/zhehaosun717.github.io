@@ -1,6 +1,8 @@
-// 平滑滚动功能
+// 平滑滚动与页面过渡功能
 document.addEventListener('DOMContentLoaded', function() {
-  // 为所有锚点链接添加平滑滚动
+  const isReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 为所有锚点链接添加滚动行为 (减弱动态模式下为即时跳转)
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
@@ -9,11 +11,18 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (targetElement) {
         targetElement.scrollIntoView({
-          behavior: 'smooth'
+          behavior: isReducedMotion ? 'auto' : 'smooth'
         });
       }
     });
   });
+
+  if (isReducedMotion) {
+    document.querySelectorAll('.fade-in-section').forEach(el => {
+      el.classList.add('is-visible');
+    });
+    return;
+  }
 
   // 页面过渡动画 (Intersection Observer)
   const observerOptions = {

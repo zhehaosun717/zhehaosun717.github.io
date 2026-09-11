@@ -11,13 +11,20 @@
 (function () {
   'use strict';
 
+  // ── Weak device & motion checks ──
+  const isMobile = window.innerWidth < 769 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isWeakDevice = isMobile ||
+    (typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency <= 4) ||
+    (typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4);
+  let isReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   // ── Configuration (tuned for gentle water-like feel) ──
   const CONFIG = {
-    maxDisplacement: 18,       // Max displacement scale (px) — gentle water ripple
+    maxDisplacement: isWeakDevice ? 12 : 18,       // Max displacement scale (px) — gentle water ripple
     baseFreqMin: 0.006,        // Turbulence base frequency (low = large, slow waves)
     baseFreqMax: 0.018,        // Turbulence base frequency (high = finer detail)
-    numOctaves: 3,             // Turbulence complexity
-    influenceRadius: 280,      // Mouse influence radius (px) around card
+    numOctaves: isWeakDevice ? 2 : 3,             // Turbulence complexity (2 octaves on weak devices for fast SVG filters)
+    influenceRadius: isWeakDevice ? 220 : 280,     // Mouse influence radius (px) around card
     transitionSpeed: 0.05,     // Lerp speed toward target (slower = smoother)
     decaySpeed: 0.03,          // Lerp speed when mouse leaves (slow fade-out)
     seedAnimSpeed: 0.15,       // How fast the noise seed cycles (slower = more water-like)
@@ -28,6 +35,7 @@
   const mouse = { x: 0, y: 0, vx: 0, vy: 0, prevX: 0, prevY: 0 };
   const cards = [];
   let animFrame = null;
+  let lastFrame = 0;
 
   // ── Create SVG filters ──
   function createDistortionSVG() {
@@ -116,12 +124,38 @@
     mouse.vy = mouse.y - mouse.prevY;
   }
 
+  // ── Reset card distortion states ──
+  function resetCards() {
+    cards.forEach((c) => {
+      c.currentScale = 0;
+      c.targetScale = 0;
+      c.tiltX = 0;
+      c.tiltY = 0;
+      c.targetTiltX = 0;
+      c.targetTiltY = 0;
+      if (c.displacement) c.displacement.setAttribute('scale', '0');
+      if (c.imageEl) c.imageEl.style.transform = '';
+    });
+  }
+
   // ── Animation loop ──
   function animate() {
+    // Page Visibility check: stop loop when tab is hidden
+    if (document.hidden) {
+      animFrame = null;
+      return;
+    }
+
     animFrame = requestAnimationFrame(animate);
 
+    // Throttle frame rate to ~30fps on weak devices to keep UI responsive
+    if (isWeakDevice) {
+      const now = performance.now();
+      if (now - lastFrame < 33) return;
+      lastFrame = now;
+    }
+
     const velocity = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
-    const time = performance.now() * 0.001;
 
     cards.forEach((card) => {
       // Skip cards without an image container
@@ -149,9 +183,10 @@
       const influence = Math.max(0, 1 - dist / CONFIG.influenceRadius);
       card.isNear = isOverCard || influence > 0;
 
-      if (card.isNear) {
+      // Respect prefers-reduced-motion: disable displacement ripples & tilts
+      if (card.isNear && !isReducedMotion) {
         // Target displacement scales with proximity + velocity
-        const velBoost = Math.min(velocity * 0.4, 8);  // Reduced velocity boost
+        const velBoost = Math.min(velocity * 0.4, 8);
         const proximityScale = isOverCard ? 1.0 : influence;
         card.targetScale = (CONFIG.maxDisplacement + velBoost) * proximityScale;
 
@@ -210,32 +245,53 @@
 
     createDistortionSVG();
     window.addEventListener('mousemove', onMouseMove, { passive: true });
-    animate();
+
+    let isWorksVisible = false;
 
     // Pause animation when works section is not visible
     if ('IntersectionObserver' in window) {
       const worksSection = document.querySelector('.works');
       if (worksSection) {
         const observer = new IntersectionObserver((entries) => {
-          if (entries[0].isIntersecting) {
+          isWorksVisible = entries[0].isIntersecting;
+          if (isWorksVisible && !document.hidden) {
             if (!animFrame) animate();
           } else {
             if (animFrame) {
               cancelAnimationFrame(animFrame);
               animFrame = null;
-              // Reset filters when out of view
-              cards.forEach((c) => {
-                c.currentScale = 0;
-                c.displacement.setAttribute('scale', '0');
-                if (c.imageEl) {
-                  c.imageEl.style.transform = '';
-                }
-              });
+              resetCards();
             }
           }
         }, { threshold: 0.01 });
         observer.observe(worksSection);
       }
+    } else {
+      isWorksVisible = true;
+      if (!document.hidden) animate();
+    }
+
+    // Page Visibility: pause when hidden, resume when visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        if (animFrame) {
+          cancelAnimationFrame(animFrame);
+          animFrame = null;
+          resetCards();
+        }
+      } else {
+        if (!animFrame && isWorksVisible) {
+          animate();
+        }
+      }
+    });
+
+    // Listen for reduced motion preference changes
+    if (window.matchMedia) {
+      window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+        isReducedMotion = e.matches;
+        if (isReducedMotion) resetCards();
+      });
     }
   }
 
