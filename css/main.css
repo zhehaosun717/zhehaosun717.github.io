@@ -1009,8 +1009,29 @@ body:has(button:hover) .cursor-dot {
   justify-content: center;
   gap: 1.5rem;
   margin-top: 2rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1.25rem;
   opacity: 0;
+}
+
+.contact-email {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  opacity: 0;
+}
+
+.contact-email a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.contact-email a:hover {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
 }
 
 .social-link {
@@ -1039,108 +1060,7 @@ body:has(button:hover) .cursor-dot {
   fill: currentColor;
 }
 
-/* Contact Form */
-.contact-form {
-  max-width: 450px;
-  margin: 0 auto;
-  text-align: left;
-  opacity: 0;
-  transform: translateY(30px);
-}
 
-.form-group {
-  margin-bottom: 1.2rem;
-}
-
-.form-input,
-.form-textarea {
-  width: 100%;
-  background: rgba(15, 22, 45, 0.6);
-  border: 1px solid rgba(201, 168, 76, 0.12);
-  border-radius: 8px;
-  padding: 0.9rem 1rem;
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  outline: none;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 25px rgba(201, 168, 76, 0.1);
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder {
-  color: var(--text-muted);
-}
-
-.form-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.form-submit {
-  width: 100%;
-  padding: 0.9rem;
-  background: transparent;
-  border: 1px solid var(--accent-gold);
-  border-radius: 8px;
-  color: var(--accent-gold);
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  transition: all 0.4s var(--ease-out-expo);
-  position: relative;
-  overflow: hidden;
-}
-
-.form-submit:hover {
-  background: var(--accent-gold);
-  color: var(--bg-primary);
-  box-shadow: 0 10px 30px rgba(201, 168, 76, 0.2);
-  transform: translateY(-2px);
-}
-
-.form-submit:disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-/* ---------- Form Status ---------- */
-.form-status {
-  margin-top: 1rem;
-  padding: 0;
-  font-size: 0.85rem;
-  text-align: center;
-  border-radius: 8px;
-  transition: all 0.4s var(--ease-out-expo);
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-}
-
-.form-status.visible {
-  padding: 0.8rem 1rem;
-  max-height: 80px;
-  opacity: 1;
-}
-
-.form-status.success {
-  background: rgba(76, 201, 120, 0.12);
-  border: 1px solid rgba(76, 201, 120, 0.3);
-  color: #4cc978;
-}
-
-.form-status.error {
-  background: rgba(201, 76, 76, 0.12);
-  border: 1px solid rgba(201, 76, 76, 0.3);
-  color: #c94c4c;
-}
 
 /* ---------- Touch Ripple ---------- */
 .touch-ripple {
@@ -1389,18 +1309,6 @@ body:has(button:hover) .cursor-dot {
     padding: 1.2rem 0 1.2rem 1.2rem;
   }
 
-  .form-input,
-  .form-textarea {
-    font-size: 16px; /* Prevents iOS zoom on focus */
-    padding: 1rem;
-    min-height: 48px;
-  }
-
-  .form-submit {
-    min-height: 52px;
-    font-size: 0.9rem;
-  }
-
   .project-card-header {
     min-height: 44px;
   }
@@ -1483,7 +1391,7 @@ html.system-cursor .cursor {
   .news-item,
   .project-card,
   .social-links,
-  .contact-form {
+  .contact-email {
     opacity: 1 !important;
     transform: none !important;
   }
