@@ -8,23 +8,24 @@
 
 /* ---------- CSS Variables ---------- */
 :root {
-  /* Core palette */
-  --bg-primary: #060b18;
-  --bg-secondary: #0a1128;
-  --bg-card: rgba(15, 22, 45, 0.75);
-  --bg-card-hover: rgba(25, 35, 65, 0.85);
+  /* Core palette — deep midnight navy-teal harmonized with #39C5BB, Gold & Violet */
+  --bg-primary: #060b16;
+  --bg-secondary: #0a1326;
+  --bg-card: rgba(12, 22, 42, 0.78);
+  --bg-card-hover: rgba(18, 32, 58, 0.88);
 
-  /* Accent colors */
-  --accent-gold: #c9a84c;
-  --accent-gold-soft: rgba(201, 168, 76, 0.15);
-  --accent-blue: #3a7bd5;
-  --accent-cyan: #56c8d8;
+  /* Multi-tone Accent System: #39C5BB Teal + Warm Champagne Gold + Cosmic Violet */
+  --accent-teal: #39c5bb;
+  --accent-gold: #e2b86b;
+  --accent-gold-soft: rgba(57, 197, 187, 0.14);
+  --accent-blue: #3b82f6;
+  --accent-cyan: #39c5bb;
   --accent-purple: #8b5cf6;
 
-  /* Text */
-  --text-primary: #e8e0d0;
-  --text-secondary: rgba(232, 224, 208, 0.6);
-  --text-muted: rgba(232, 224, 208, 0.35);
+  /* Text — warm-ivory & crisp mist for high legibility */
+  --text-primary: #f2efe9;
+  --text-secondary: rgba(238, 242, 245, 0.86);
+  --text-muted: rgba(208, 218, 228, 0.72);
 
   /* Spacing */
   --section-padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 6rem);
@@ -112,12 +113,12 @@ img {
   height: 100%;
   z-index: 1;
   pointer-events: none;
-  /* Very subtle vignette — most masking now happens in the shader */
+  /* Subtle cinematic vignette preserving 3D flow-field dynamic range */
   background: radial-gradient(
     ellipse at 50% 50%,
-    transparent 0%,
-    rgba(6, 11, 24, 0.15) 50%,
-    rgba(6, 11, 24, 0.4) 100%
+    rgba(4, 8, 18, 0.08) 0%,
+    rgba(4, 8, 18, 0.18) 60%,
+    rgba(4, 8, 18, 0.42) 100%
   );
 }
 
@@ -216,7 +217,7 @@ body:has(button:hover) .cursor-dot {
   background: rgba(6, 11, 24, 0.85);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+  border-bottom: 1px solid rgba(57, 197, 187, 0.1);
 }
 
 .nav-logo {
@@ -306,6 +307,7 @@ body:has(button:hover) .cursor-dot {
   line-height: 0.95;
   letter-spacing: -0.03em;
   color: var(--text-primary);
+  text-shadow: 0 4px 28px rgba(4, 8, 18, 0.92);
 }
 
 .hero-title .text-reveal {
@@ -318,14 +320,16 @@ body:has(button:hover) .cursor-dot {
   text-transform: uppercase;
   color: var(--accent-gold);
   margin-top: 2rem;
-  font-weight: 300;
+  font-weight: 400;
+  text-shadow: 0 2px 16px rgba(4, 8, 18, 0.95);
 }
 
 .hero-tagline {
-  font-size: clamp(0.8rem, 1vw, 1rem);
-  color: var(--text-muted);
+  font-size: clamp(0.85rem, 1.05vw, 1.02rem);
+  color: var(--text-secondary);
   margin-top: 1rem;
-  max-width: 500px;
+  max-width: 540px;
+  text-shadow: 0 2px 14px rgba(4, 8, 18, 0.95), 0 0 6px rgba(4, 8, 18, 0.9);
 }
 
 .hero-tagline .text-reveal {
@@ -378,7 +382,7 @@ body:has(button:hover) .cursor-dot {
   font-size: 0.7rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--accent-gold);
+  color: var(--accent-teal);
   margin-bottom: 1rem;
   opacity: 0;
   transform: translateY(20px);
@@ -416,18 +420,18 @@ body:has(button:hover) .cursor-dot {
   overflow: hidden;
   aspect-ratio: 1 / 1.15;
   box-shadow:
-    0 0 0 1px rgba(212, 175, 55, 0.15),
+    0 0 0 1px rgba(57, 197, 187, 0.15),
     0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(212, 175, 55, 0.06);
+    0 0 40px rgba(57, 197, 187, 0.06);
   transition: transform 0.6s var(--ease-out-expo), box-shadow 0.6s var(--ease-out-expo);
 }
 
 .portrait-frame:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow:
-    0 0 0 1px rgba(212, 175, 55, 0.3),
+    0 0 0 1px rgba(57, 197, 187, 0.3),
     0 30px 80px rgba(0, 0, 0, 0.6),
-    0 0 60px rgba(212, 175, 55, 0.12);
+    0 0 60px rgba(57, 197, 187, 0.12);
 }
 
 .portrait-img {
@@ -450,7 +454,7 @@ body:has(button:hover) .cursor-dot {
   background: linear-gradient(
     180deg,
     transparent 50%,
-    rgba(212, 175, 55, 0.08) 100%
+    rgba(57, 197, 187, 0.08) 100%
   );
   pointer-events: none;
 }
@@ -459,6 +463,7 @@ body:has(button:hover) .cursor-dot {
   font-size: clamp(0.95rem, 1.2vw, 1.1rem);
   line-height: 1.8;
   color: var(--text-secondary);
+  text-shadow: 0 2px 12px rgba(4, 8, 18, 0.9);
 }
 
 .about-text p {
@@ -514,7 +519,7 @@ body:has(button:hover) .cursor-dot {
   height: 9px;
   border-radius: 50%;
   background: var(--accent-gold);
-  box-shadow: 0 0 12px rgba(201, 168, 76, 0.5);
+  box-shadow: 0 0 12px rgba(57, 197, 187, 0.5);
   transform: scale(0);
   transition: transform 0.5s var(--ease-out-expo);
 }
@@ -567,7 +572,7 @@ body:has(button:hover) .cursor-dot {
   color: rgba(232, 224, 208, 0.06);
   letter-spacing: -0.02em;
   opacity: 0;
-  -webkit-text-stroke: 1px rgba(201, 168, 76, 0.08);
+  -webkit-text-stroke: 1px rgba(57, 197, 187, 0.08);
 }
 
 .works-grid {
@@ -584,7 +589,7 @@ body:has(button:hover) .cursor-dot {
   border-radius: 12px;
   overflow: hidden;
   background: var(--bg-card);
-  border: 1px solid rgba(201, 168, 76, 0.08);
+  border: 1px solid rgba(57, 197, 187, 0.08);
   cursor: none;
   opacity: 0;
   transform: translateY(80px) scale(0.92) rotateX(4deg);
@@ -602,10 +607,10 @@ body:has(button:hover) .cursor-dot {
 }
 
 .project-card:hover {
-  border-color: rgba(201, 168, 76, 0.25);
+  border-color: rgba(57, 197, 187, 0.25);
   background: var(--bg-card-hover);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5),
-              0 0 50px rgba(201, 168, 76, 0.06);
+              0 0 50px rgba(57, 197, 187, 0.06);
 }
 
 .project-card-image {
@@ -657,7 +662,7 @@ body:has(button:hover) .cursor-dot {
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   padding: 0.6rem 1.4rem;
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  border: 1px solid rgba(57, 197, 187, 0.3);
   border-radius: 4px;
   z-index: 5;
   pointer-events: none;
@@ -698,8 +703,9 @@ body:has(button:hover) .cursor-dot {
   font-size: 0.7rem;
   padding: 0.3rem 0.7rem;
   border-radius: 20px;
-  background: var(--accent-gold-soft);
-  color: var(--accent-gold);
+  background: rgba(57, 197, 187, 0.13);
+  border: 1px solid rgba(57, 197, 187, 0.28);
+  color: var(--accent-teal);
   letter-spacing: 0.05em;
   transform: translateY(10px);
   opacity: 0;
@@ -722,13 +728,13 @@ body:has(button:hover) .cursor-dot {
   overflow: hidden;
   transition: max-height 0.6s var(--ease-out-expo), padding 0.4s ease;
   background: rgba(10, 17, 40, 0.5);
-  border-top: 1px solid rgba(201, 168, 76, 0);
+  border-top: 1px solid rgba(57, 197, 187, 0);
 }
 
 .project-detail.expanded {
   max-height: 600px;
   padding: 2rem 1.5rem;
-  border-top-color: rgba(201, 168, 76, 0.15);
+  border-top-color: rgba(57, 197, 187, 0.15);
 }
 
 .project-detail-content {
@@ -795,7 +801,7 @@ body:has(button:hover) .cursor-dot {
   gap: 1rem;
   align-items: baseline;
   padding: 0.35rem 0;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+  border-bottom: 1px solid rgba(57, 197, 187, 0.08);
 }
 
 .news-year {
@@ -851,7 +857,7 @@ body:has(button:hover) .cursor-dot {
   color: var(--accent-gold);
   margin-bottom: 0.8rem;
   padding-bottom: 0.4rem;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  border-bottom: 1px solid rgba(57, 197, 187, 0.15);
   display: flex;
   align-items: center;
   gap: 0.6rem;
@@ -872,16 +878,17 @@ body:has(button:hover) .cursor-dot {
 
 .research-item {
   padding: 1.25rem 0 1.25rem 1.75rem;
-  border-left: 1px solid rgba(201, 168, 76, 0.15);
+  border-left: 1px solid rgba(57, 197, 187, 0.22);
   position: relative;
   opacity: 0;
   transform: translateX(-25px);
   margin-bottom: 0.6rem;
   transition: border-color 0.3s ease;
+  text-shadow: 0 2px 12px rgba(4, 8, 18, 0.92);
 }
 
 .research-item:hover {
-  border-left-color: rgba(201, 168, 76, 0.4);
+  border-left-color: rgba(57, 197, 187, 0.4);
 }
 
 .research-item::before {
@@ -943,7 +950,7 @@ body:has(button:hover) .cursor-dot {
   letter-spacing: 0.02em;
   color: var(--text-secondary);
   text-decoration: none;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.28);
+  border-bottom: 1px solid rgba(57, 197, 187, 0.28);
   transition: color 0.25s ease, border-color 0.25s ease;
   word-break: break-word;
 }
@@ -952,7 +959,7 @@ body:has(button:hover) .cursor-dot {
 .pub-venue-link a:hover,
 .research-link:hover {
   color: var(--accent-gold);
-  border-bottom-color: rgba(201, 168, 76, 0.7);
+  border-bottom-color: rgba(57, 197, 187, 0.7);
 }
 
 .pub-tags {
@@ -1025,7 +1032,7 @@ body:has(button:hover) .cursor-dot {
 .contact-email a {
   color: var(--text-secondary);
   text-decoration: none;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.35);
+  border-bottom: 1px solid rgba(57, 197, 187, 0.35);
   transition: color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -1038,7 +1045,7 @@ body:has(button:hover) .cursor-dot {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  border: 1px solid rgba(201, 168, 76, 0.2);
+  border: 1px solid rgba(57, 197, 187, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1051,7 +1058,7 @@ body:has(button:hover) .cursor-dot {
   background: var(--accent-gold-soft);
   color: var(--accent-gold);
   transform: translateY(-5px) scale(1.1);
-  box-shadow: 0 15px 30px rgba(201, 168, 76, 0.15);
+  box-shadow: 0 15px 30px rgba(57, 197, 187, 0.15);
 }
 
 .social-link svg {
@@ -1072,7 +1079,7 @@ body:has(button:hover) .cursor-dot {
 .touch-ripple .ripple-effect {
   position: absolute;
   border-radius: 50%;
-  background: rgba(201, 168, 76, 0.25);
+  background: rgba(57, 197, 187, 0.25);
   transform: scale(0);
   animation: rippleAnim 0.6s ease-out forwards;
   pointer-events: none;
@@ -1126,7 +1133,7 @@ body:has(button:hover) .cursor-dot {
 .loader-ring {
   width: 40px;
   height: 40px;
-  border: 2px solid rgba(201, 168, 76, 0.15);
+  border: 2px solid rgba(57, 197, 187, 0.15);
   border-top-color: var(--accent-gold);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -1166,7 +1173,7 @@ body:has(button:hover) .cursor-dot {
   transform: translateX(-50%);
   width: 1px;
   height: 120px;
-  background: linear-gradient(to bottom, rgba(201, 168, 76, 0.4), transparent);
+  background: linear-gradient(to bottom, rgba(57, 197, 187, 0.4), transparent);
   opacity: 0;
   transition: opacity 1s ease;
 }
@@ -1336,6 +1343,13 @@ body:has(button:hover) .cursor-dot {
   /* Disable parallax jank on mobile */
   [data-speed] {
     will-change: auto;
+  }
+
+  /* Avoid expensive per-frame Gaussian blur + scale recomputation on 7.5MB placeholder images on mobile */
+  .image-placeholder img {
+    filter: brightness(0.42) saturate(0.5);
+    transition: none !important;
+    transform: none !important;
   }
 }
 

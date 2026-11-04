@@ -141,16 +141,16 @@
       const obj = { val: 0 };
       gsap.to(obj, {
         val: 100,
-        duration: 2.0,
-        ease: 'power2.inOut',
+        duration: 0.45,
+        ease: 'power2.out',
         onUpdate: () => {
           counter.textContent = Math.round(obj.val);
         },
         onComplete: () => {
           gsap.to(loader, {
             opacity: 0,
-            duration: 0.6,
-            ease: 'power2.inOut',
+            duration: 0.35,
+            ease: 'power2.out',
             onComplete: () => {
               loader.classList.add('loaded');
               resolve();
@@ -863,6 +863,5 @@
     initSectionTransitions();
     initMagneticLinks();
     initHighlightAnimations();
-    initBackgroundColorTransitions();
   };
 })();

@@ -18,6 +18,16 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/main.css">
+
+  <!-- Three.js r186 Import Map (per threejs-fundamentals skill) -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -91,7 +101,7 @@
           <div class="portrait-frame">
             <picture>
               <source srcset="zhehaosun_pic.webp" type="image/webp">
-              <img src="zhehaosun_pic.png" alt="Zhehao Sun — Portrait" class="portrait-img" loading="lazy">
+              <img src="zhehaosun_pic.png" alt="Zhehao Sun — Portrait" class="portrait-img" loading="lazy" decoding="async">
             </picture>
             <div class="portrait-glow"></div>
           </div>
@@ -260,7 +270,7 @@
         <article class="project-card" id="project-unreal">
           <div class="project-card-header">
             <div class="project-card-image">
-              <img src="assets/images/projects/1.avif" alt="Unreal Logic System & Shader" loading="lazy">
+              <img src="assets/images/projects/1.avif" alt="Unreal Logic System & Shader" decoding="async">
             </div>
             <div class="project-card-content">
               <div class="project-card-category">Unreal Engine</div>
@@ -287,7 +297,7 @@
         <article class="project-card" id="project-game">
           <div class="project-card-header">
             <div class="project-card-image">
-              <img src="assets/images/projects/2.avif" alt="Game Project" loading="lazy">
+              <img src="assets/images/projects/2.avif" alt="Game Project" decoding="async">
             </div>
             <div class="project-card-content">
               <div class="project-card-category">Game Design</div>
@@ -313,7 +323,7 @@
         <article class="project-card" id="project-environment">
           <div class="project-card-header">
             <div class="project-card-image image-placeholder">
-              <img src="assets/images/projects/3.avif" alt="Game Environment" loading="lazy">
+              <img src="assets/images/projects/3.avif" alt="Game Environment" decoding="async">
               <div class="image-updating-label">Updating Soon</div>
             </div>
             <div class="project-card-content">
@@ -341,7 +351,7 @@
         <article class="project-card" id="project-character">
           <div class="project-card-header">
             <div class="project-card-image image-placeholder">
-              <img src="assets/images/projects/4.avif" alt="Character Design" loading="lazy">
+              <img src="assets/images/projects/4.avif" alt="Character Design" decoding="async">
               <div class="image-updating-label">Updating Soon</div>
             </div>
             <div class="project-card-content">
@@ -408,12 +418,11 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-  <script src="js/shader-background.js"></script>
+  <script type="module" src="js/shader-background.js"></script>
   <script src="js/fluid-distortion.js"></script>
   <script src="js/scroll-animations.js"></script>
   <script src="js/main.js"></script>
