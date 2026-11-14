@@ -502,6 +502,32 @@ body:has(button:hover) .cursor-dot {
   color: var(--bg-primary);
 }
 
+.cv-section {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 7rem 2rem 5rem;
+  text-align: center;
+  position: relative;
+}
+
+.cv-section-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent-teal);
+  margin-bottom: 1rem;
+}
+
+.cv-section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
 /* Education Timeline */
 .timeline {
   position: relative;
