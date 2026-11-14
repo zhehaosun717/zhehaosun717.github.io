@@ -244,12 +244,6 @@
       duration: 0.9,
       stagger: 0.1,
     }, '-=0.6')
-    // Tagline slides up
-    .to('.hero-tagline .text-reveal-inner', {
-      y: '0%',
-      duration: 0.9,
-      stagger: 0.12,
-    }, '-=0.5')
     // Scroll indicator fades in
     .to('.scroll-indicator', {
       opacity: 1,
