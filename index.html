@@ -59,6 +59,7 @@
       <li><a href="#about">About</a></li>
       <li><a href="#research">Research</a></li>
       <li><a href="#works">Works</a></li>
+      <li><a href="Zhehao_Sun_CV.pdf" target="_blank" rel="noopener">CV</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation">
@@ -106,13 +107,16 @@
         <div class="about-text">
           <p>
             I’m a <span class="highlight">game designer</span> and MA student in Interdisciplinary Graduate Studies
-            (<span class="highlight">Digital Arts &amp; Humanities</span>) at UBC Okanagan. My research interests are
+            (<span class="highlight">Digital Arts &amp; Humanities</span>) at UBC Okanagan, supervised by Dr. Megan Smith. My research interests are
             <span class="highlight">game mechanics</span> and <span class="highlight">player experience</span>,
             together with procedural content generation and AI-assisted game design.
           </p>
           <p>
             I hold a BFA in Interactive Design &amp; Game Development from SCAD, and I build when research needs a
             playable form: <span class="highlight">Unreal</span>, Unity, WebGL, and shaders.
+          </p>
+          <p>
+            <a class="cv-button" href="Zhehao_Sun_CV.pdf" target="_blank" rel="noopener">View CV (PDF)</a>
           </p>
         </div>
 
@@ -169,7 +173,7 @@
             </div>
             <div class="research-venue">In <em>Companion Proceedings of CHI PLAY '26</em> (pp. 7–13). ACM.</div>
             <div class="pub-doi"><a href="https://doi.org/10.1145/3800965.3834328" target="_blank" rel="noopener">DOI</a></div>
-            <div class="pub-tags"><span class="pub-tag conf">Conference</span></div>
+            <div class="pub-tags"><span class="pub-tag conf">Work in Progress</span><span class="pub-tag conf">Conference</span></div>
           </div>
 
           <!-- DiGRA 2026 — Ludoproprioceptive -->
@@ -180,7 +184,7 @@
             </div>
             <div class="research-venue">Proceedings of the 2026 Digital Games Research Association Conference (DiGRA 2026). Ireland.</div>
             <div class="pub-doi"><a href="https://doi.org/10.26503/dl.v2026i4.2997" target="_blank" rel="noopener">DOI</a></div>
-            <div class="pub-tags"><span class="pub-tag conf">Conference</span></div>
+            <div class="pub-tags"><span class="pub-tag conf">Extended Abstract</span><span class="pub-tag conf">Conference</span></div>
           </div>
 
           <!-- Soulslike — Springer LNCS -->
@@ -202,7 +206,7 @@
             </div>
             <div class="research-venue">In <em>Companion Proceedings of CHI PLAY '26</em> (pp. 261–266). ACM.</div>
             <div class="pub-doi"><a href="https://doi.org/10.1145/3800965.3834330" target="_blank" rel="noopener">DOI</a></div>
-            <div class="pub-tags"><span class="pub-tag conf">Conference</span></div>
+            <div class="pub-tags"><span class="pub-tag conf">Work in Progress</span><span class="pub-tag conf">Conference</span></div>
           </div>
 
           <!-- Eco-Games Teacher -->
@@ -213,7 +217,7 @@
             </div>
             <div class="research-venue">Proceedings of the 2026 Digital Games Research Association Conference (DiGRA 2026). Ireland.</div>
             <div class="pub-doi"><a href="https://doi.org/10.26503/dl.v2026i4.3002" target="_blank" rel="noopener">DOI</a></div>
-            <div class="pub-tags"><span class="pub-tag conf">Conference</span></div>
+            <div class="pub-tags"><span class="pub-tag conf">Extended Abstract</span><span class="pub-tag conf">Conference</span></div>
           </div>
 
           <!-- Ecological Empathy — Springer LNCS -->
@@ -261,55 +265,94 @@
 
       <div class="works-grid">
 
-        <!-- Project 1: Unreal Logic System & Shader -->
-        <article class="project-card" id="project-unreal">
+        <!-- Project: Wastescape -->
+        <article class="project-card" id="project-wastescape">
           <div class="project-card-header">
             <div class="project-card-image">
-              <img src="assets/images/projects/1.avif" alt="Unreal Logic System & Shader" decoding="async">
+              <img src="assets/images/projects/wastescape.webp" alt="Wastescape HUD design mock-up: status bars, tool slots, backpack and a salvage choice panel over the excavation view" decoding="async">
             </div>
             <div class="project-card-content">
-              <div class="project-card-category">Unreal Engine</div>
-              <h3 class="project-card-title">Unreal Logic System & Shader</h3>
-              <p class="project-card-desc">Interactive systems and custom shaders developed with Unreal Engine, showcasing Blueprint logic and real-time VFX.</p>
+              <div class="project-card-category">MA Thesis Project · 2025 — Present</div>
+              <h3 class="project-card-title">Wastescape</h3>
+              <p class="project-card-desc">2D excavation roguelite game, built solo in Unity 6.5 (C#).</p>
               <div class="project-card-tags">
-                <span class="tag">Shader</span>
-                <span class="tag">Blueprint</span>
-                <span class="tag">VFX</span>
+                <span class="tag">Unity</span>
+                <span class="tag">C#</span>
+                <span class="tag">Procedural Generation</span>
+                <span class="tag">HUD Design</span>
               </div>
             </div>
           </div>
           <div class="project-detail">
             <div class="project-detail-content">
               <p class="project-detail-text">
-                A deep dive into Unreal Engine's material and Blueprint systems. This project demonstrates custom shader development
-                for real-time visual effects, interactive logic systems, and optimization techniques for game-ready assets.
+                Deterministic procedural terrain generation, grid locomotion physics, hazard chain reactions,
+                and an artifact archive system.
+              </p>
+              <div class="project-detail-links">
+                <a href="https://zhehaosun717.itch.io/wastescape" class="project-link" target="_blank" rel="noopener">Play in browser (itch.io)</a>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project: Beaver World -->
+        <article class="project-card" id="project-beaver-world">
+          <div class="project-card-header">
+            <div class="project-card-image">
+              <video src="assets/images/projects/beaver-world-menu.mp4" poster="assets/images/projects/beaver-world-menu-poster.webp" autoplay loop muted playsinline preload="metadata" aria-label="Beaver World main menu: the title and menu buttons over a live 3D riverside scene at sunset"></video>
+            </div>
+            <div class="project-card-content">
+              <div class="project-card-category">UBC Okanagan · Work Study · 2026 — Present</div>
+              <h3 class="project-card-title">Beaver World</h3>
+              <p class="project-card-desc">3D educational game, team project. My role: Technical Artist / Developer.</p>
+              <div class="project-card-tags">
+                <span class="tag">Unity HDRP</span>
+                <span class="tag">Procedural Generation</span>
+                <span class="tag">Optimization</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-detail">
+            <div class="project-detail-content">
+              <p class="project-detail-text">
+                Built a procedural vegetation generator that fills five 4 km² scenes with trees, shrubs and grass
+                from per-scene ecological rules. Reduced triangles per frame from 255 M to about 40 M and halved
+                texture memory (3.5 GB to 1.7 GB). Created the wildfire visuals and post-fire regrowth, and
+                designed the main menu with its live 3D background scene.
               </p>
             </div>
           </div>
         </article>
 
-        <!-- Project 2: Game Project -->
+        <!-- Project: Destination: Imagination -->
         <article class="project-card" id="project-game">
           <div class="project-card-header">
             <div class="project-card-image">
-              <img src="assets/images/projects/2.avif" alt="Game Project" decoding="async">
+              <img src="assets/images/projects/2.avif" alt="Destination: Imagination, the VR ride on stage at SCAD Day 2018" decoding="async">
             </div>
             <div class="project-card-content">
-              <div class="project-card-category">Game Design</div>
-              <h3 class="project-card-title">Game Project</h3>
-              <p class="project-card-desc">Full game development project with innovative mechanics and storytelling, built with focus on player experience.</p>
+              <div class="project-card-category">VR · SCAD · 2018</div>
+              <h3 class="project-card-title">Destination: Imagination</h3>
+              <p class="project-card-desc">VR entertainment ride for the 2018 SCAD Day exhibition, built in Unreal Engine by a student team.</p>
               <div class="project-card-tags">
-                <span class="tag">Unity</span>
-                <span class="tag">Narrative</span>
+                <span class="tag">Unreal Engine</span>
+                <span class="tag">VR</span>
+                <span class="tag">Environment Art</span>
               </div>
             </div>
           </div>
           <div class="project-detail">
             <div class="project-detail-content">
               <p class="project-detail-text">
-                A complete game project exploring narrative-driven mechanics and player agency. Designed and implemented
-                from concept through production, including gameplay systems, level design, and user experience testing.
+                A virtual amusement ride that takes visitors on a journey into space. As an environment artist
+                I built the sci-fi cockpit of the spaceship, matched to the physical set made by the production
+                design team.
               </p>
+              <div class="project-detail-links">
+                <a href="https://www.unrealengine.com/en-US/developer-interviews/unreal-engine-fuels-destination-imagination-virtual-reality-immersive-experience-at-scad" class="project-link" target="_blank" rel="noopener">Featured by Unreal Engine</a>
+                <a href="https://www.youtube.com/watch?v=B1sQxhigy3Q" class="project-link" target="_blank" rel="noopener">Watch video (YouTube)</a>
+              </div>
             </div>
           </div>
         </article>
@@ -345,7 +388,7 @@
       </div>
 
       <p class="contact-email">
-        <a href="mailto:zhehaosun717@hotmail.com">zhehaosun717@hotmail.com</a>
+        <a href="mailto:zhehaosun717@hotmail.com">zhehaosun717@hotmail.com</a> · <a href="Zhehao_Sun_CV.pdf" target="_blank" rel="noopener">CV (PDF)</a>
       </p>
     </section>
 
