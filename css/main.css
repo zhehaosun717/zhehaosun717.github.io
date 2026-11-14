@@ -484,6 +484,24 @@ body:has(button:hover) .cursor-dot {
   transition: background-size 0.8s var(--ease-out-expo);
 }
 
+.cv-button {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid var(--accent-gold);
+  border-radius: 25px;
+  color: var(--accent-gold);
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.cv-button:hover {
+  background: var(--accent-gold);
+  color: var(--bg-primary);
+}
+
 /* Education Timeline */
 .timeline {
   position: relative;
