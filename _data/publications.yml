@@ -59,4 +59,12 @@ conference:
     doi_display: "doi.org/10.1145/3800965.3834330"
     type: "Conference"
 
+  - title: "Animation Design Philosophy in 3D Educational Games: The Development of Beaver World"
+    authors: "Zhen, C., Xu, Y., Shindo Souto, C., Sun, Z., Lasserre, P., Dulic, A., & Thorogood, M."
+    venue: "Communications in Computer and Information Science (HCI International 2026 Posters). Springer, Cham"
+    year: 2026
+    doi: "https://doi.org/10.1007/978-3-032-30816-0_41"
+    doi_display: "doi.org/10.1007/978-3-032-30816-0_41"
+    type: "Poster"
+
 forthcoming: []
